@@ -1,0 +1,177 @@
+
+body {
+  background: linear-gradient(to bottom right, #000000, #1a1a1a);
+  color: white;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  direction: rtl;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 30px;
+  font-size: 36px;
+  color: #f0f0f0;
+}
+
+#wordInputSection {
+  background-color: #2a2a2a;
+  padding: 15px;
+  margin: 0 auto 20px auto;
+  width: fit-content;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+#targetWordInput {
+  padding: 10px;
+  font-size: 18px;
+  border: 2px solid #555;
+  border-radius: 5px;
+  background-color: #fff;
+  color: black;
+  margin-left: 10px;
+}
+
+#guessInput {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: none;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#board {
+  display: grid;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+.cell {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #888;
+  margin: 2px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 50px;
+  border-radius: 8px;
+  background-color: #1c1c1c;
+  box-shadow: 0 0 5px rgba(255,255,255,0.05);
+}
+
+.cell.correct {
+  background-color: green;
+  color: white;
+  border-color: #0f0;
+}
+
+.cell.present {
+  background-color: orange;
+  color: white;
+  border-color: #ffa500;
+}
+
+.cell.absent {
+  background-color: #555;
+  color: white;
+  border-color: #777;
+}
+
+#keyboard {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.key {
+  background-color: #333;
+  color: white;
+  border: none;
+  margin: 2px;
+  padding: 10px 14px;
+  font-size: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.2s;
+}
+
+.key.correct {
+  background-color: green;
+}
+
+.key.present {
+  background-color: orange;
+}
+
+.key.absent {
+  background-color: gray;
+}
+
+.key:hover {
+  background-color: #555;
+}
+
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  #targetWordInput,
+  #guessInput {
+    width: 90%;
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .cell {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    line-height: 40px;
+  }
+
+  .key {
+    padding: 8px 10px;
+    font-size: 16px;
+  }
+
+  #wordInputSection {
+    width: 95%;
+  }
+
+  #board {
+    gap: 6px;
+  }
+}

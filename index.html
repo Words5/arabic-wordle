@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تخمين الكلمة</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>تخمين الكلمة - عربي</h1>
+
+  <div id="wordInputSection">
+    <input type="text" id="targetWordInput" placeholder="أدخل الكلمة السرية" />
+    <button onclick="startGame()">ابدأ اللعبة</button>
+  </div>
+
+  <div id="guessSection" style="display: none;">
+    <input type="text" id="guessInput" placeholder="أدخل تخمينك" />
+    <button onclick="submitGuess()">تحقق</button>
+  </div>
+
+  <div id="board"></div>
+  <div id="keyboard"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
