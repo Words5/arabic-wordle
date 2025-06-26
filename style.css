@@ -77,3 +77,6 @@ body {
   color: #00ffff;
   font-size: 32px;
 }
+#keyboard > div {
+  margin: 4px 0;
+}
