@@ -3,7 +3,7 @@ let targetWord = "";
 let currentGuess = "";
 let maxGuesses = 6;
 let currentRow = 0;
-let wordLength = 0;
+let wordLength = 0<10;
 
 function setTargetWord() {
   const input = document.getElementById("targetWordInput").value.trim();
