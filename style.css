@@ -1,0 +1,157 @@
+
+body {
+  font-family: 'Tahoma', sans-serif;
+  background: radial-gradient(ellipse at center, #000 0%, #111 100%);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+#board {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 90%;
+}
+
+.cell {
+  width: 50px;
+  height: 50px;
+  background-color: #222;
+  border: 2px solid #555;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  line-height: 50px;
+  border-radius: 8px;
+}
+
+#targetWordInput {
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 2px solid #666;
+  width: 250px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #0a84ff;
+  color: white;
+}
+
+#keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.key {
+  padding: 10px 15px;
+  margin: 5px;
+  font-size: 18px;
+  background-color: #444;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.key.correct {
+  background-color: green;
+}
+
+.key.wrong-place {
+  background-color: goldenrod;
+}
+
+.key.wrong {
+  background-color: #444;
+  opacity: 0.4;
+}
+
+#resultMessage {
+  display: none;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(30, 30, 30, 0.95);
+  padding: 30px;
+  border: 3px solid #fff;
+  border-radius: 15px;
+  color: #0f0;
+  font-size: 28px;
+  z-index: 1000;
+  box-shadow: 0 0 20px #0f0;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from { box-shadow: 0 0 10px #0f0; }
+  to { box-shadow: 0 0 30px #0f0; }
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 24px; }
+  #targetWordInput, #guessInput { width: 90%; font-size: 16px; }
+  button { font-size: 14px; padding: 8px 12px; }
+  .cell { width: 40px; height: 40px; font-size: 20px; line-height: 40px; }
+  .key { padding: 8px 10px; font-size: 16px; }
+  #wordInputSection { width: 95%; }
+  #board { gap: 6px; }
+}
+
+
+.key.repeat {
+  background-color: #007bff;
+}
+
+.cell.repeat {
+  background-color: #007bff;
+}
+
+
+#resultMessage strong {
+  color: #00ffff;
+  font-size: 32px;
+}
+
+
+#restartButton {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#restartButton:hover {
+  background-color: #45a049;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.keyboard-row button {
+  margin: 2px;
+  flex: 1;
+  max-width: 40px;
+  height: 40px;
+  font-size: 16px;
+}
