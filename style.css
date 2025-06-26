@@ -1,132 +1,41 @@
-
 body {
-  font-family: 'Tahoma', sans-serif;
-  background: radial-gradient(ellipse at center, #000 0%, #111 100%);
-  color: white;
+  font-family: Arial, sans-serif;
   text-align: center;
-  padding: 20px;
+  background-color: #f0f0f0;
 }
 
 #board {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
   margin: 20px auto;
-  max-width: 90%;
+  display: grid;
+  grid-template-columns: repeat(5, 50px);
+  gap: 5px;
+  width: max-content;
 }
 
-.cell {
+.box {
   width: 50px;
   height: 50px;
-  background-color: #222;
-  border: 2px solid #555;
-  color: white;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
   font-size: 24px;
-  text-align: center;
   line-height: 50px;
-  border-radius: 8px;
+  text-align: center;
 }
 
-#targetWordInput {
-  padding: 10px;
-  font-size: 18px;
-  border-radius: 10px;
-  border: 2px solid #666;
-  width: 250px;
-  margin-bottom: 10px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #0a84ff;
-  color: white;
-}
-
-#keyboard {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 20px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.key {
-  padding: 10px 15px;
-  margin: 5px;
-  font-size: 18px;
-  background-color: #444;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.key.correct {
+.correct {
   background-color: green;
+  color: white;
 }
 
-.key.wrong-place {
-  background-color: goldenrod;
+.close {
+  background-color: orange;
+  color: white;
 }
 
-.key.wrong {
-  background-color: #444;
-  opacity: 0.4;
+.wrong {
+  background-color: gray;
+  color: white;
 }
-
-#resultMessage {
-  display: none;
-  position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(30, 30, 30, 0.95);
-  padding: 30px;
-  border: 3px solid #fff;
-  border-radius: 15px;
-  color: #0f0;
-  font-size: 28px;
-  z-index: 1000;
-  box-shadow: 0 0 20px #0f0;
-  animation: pulse 1s infinite alternate;
-}
-
-@keyframes pulse {
-  from { box-shadow: 0 0 10px #0f0; }
-  to { box-shadow: 0 0 30px #0f0; }
-}
-
-@media (max-width: 600px) {
-  h1 { font-size: 24px; }
-  #targetWordInput, #guessInput { width: 90%; font-size: 16px; }
-  button { font-size: 14px; padding: 8px 12px; }
-  .cell { width: 40px; height: 40px; font-size: 20px; line-height: 40px; }
-  .key { padding: 8px 10px; font-size: 16px; }
-  #wordInputSection { width: 95%; }
-  #board { gap: 6px; }
-}
-
-
-.key.repeat {
-  background-color: #007bff;
-}
-
-.cell.repeat {
-  background-color: #007bff;
-}
-
-
-#resultMessage strong {
-  color: #00ffff;
-  font-size: 32px;
-}
-
 
 #restartButton {
   padding: 10px 20px;
