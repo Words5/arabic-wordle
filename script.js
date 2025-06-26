@@ -1,141 +1,125 @@
-
 let targetWord = "";
-let currentGuess = "";
-let maxGuesses = 6;
-let currentRow = 0;
-let wordLength = 0<10;
+let currentTry = 0;
+let maxTries = 6;
+let currentFilledIndex = 0;
 
-function setTargetWord() {
-  const input = document.getElementById("targetWordInput").value.trim();
-  if (input.length !== wordLength) {
-    alert(`يجب أن تكون الكلمة ${wordLength} حروف.`);
-    return;
-  }
+function startGame() {
+  const input = document.getElementById("secretWord");
+  targetWord = input.value.trim();
+  if (targetWord === "") return;
 
-  targetWord = input.toLowerCase();
-  wordLength = targetWord.length;
-  document.getElementById("wordInputSection").style.display = "none";
-  document.getElementById("boardContainer").style.display = "block";
+  document.querySelector(".secret-input").style.display = "none";
+  document.getElementById("game").style.display = "block";
   createBoard();
-  createKeyboard("ضصثقفغعهخحجدشسيبلاتنمكطئءؤرﻻىةوزظ".split(""));
+  createKeyboard();
 }
 
 function createBoard() {
   const board = document.getElementById("board");
   board.innerHTML = "";
-  for (let i = 0; i < maxGuesses * wordLength; i++) {
-    const box = document.createElement("div");
-    box.className = "box";
-    board.appendChild(box);
+  board.style.gridTemplateColumns = `repeat(${targetWord.length}, 1fr)`;
+  for (let i = 0; i < targetWord.length * maxTries; i++) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.dataset.letter = "";
+    board.appendChild(cell);
+  }
+  currentFilledIndex = 0;
+}
+
+function createKeyboard() {
+  const keys = "ضصثقفغعهخحجچشسيبلاتنمكطزرذدأءؤئوىة";
+  const keyboard = document.getElementById("keyboard");
+  keyboard.innerHTML = "";
+  for (let i = 0; i < keys.length; i++) {
+    const key = document.createElement("div");
+    key.classList.add("key");
+    key.textContent = keys[i];
+    key.onclick = () => {
+      if (currentFilledIndex >= maxTries * targetWord.length) return;
+      const row = currentTry * targetWord.length;
+      const cell = document.getElementsByClassName("cell")[row + (currentFilledIndex % targetWord.length)];
+      cell.textContent = keys[i];
+      cell.dataset.letter = keys[i];
+      currentFilledIndex++;
+      updateInputFromBoard();
+    };
+    keyboard.appendChild(key);
   }
 }
 
-function handleKeyPress(key) {
-  if (currentGuess.length < wordLength) {
-    currentGuess += key;
-    updateBoard();
+function updateInputFromBoard() {
+  let guess = "";
+  for (let i = 0; i < targetWord.length; i++) {
+    const cell = document.getElementsByClassName("cell")[currentTry * targetWord.length + i];
+    guess += cell.dataset.letter || "";
   }
+  document.getElementById("guessInput").value = guess;
 }
 
-function updateBoard() {
-  const boxes = document.querySelectorAll(".box");
-  for (let i = 0; i < currentGuess.length; i++) {
-    boxes[currentRow * wordLength + i].textContent = currentGuess[i];
-  }
-}
+function checkGuess() {
+  const guessInput = document.getElementById("guessInput");
+  let guess = guessInput.value.trim();
+  if (guess.length !== targetWord.length) return;
 
-function createKeyboard(keys) {
-  const keyboardContainer = document.getElementById("keyboard");
-  keyboardContainer.innerHTML = "";
+  const startIdx = currentTry * targetWord.length;
+  const tempTarget = targetWord.split("");
+  const guessLetters = guess.split("");
+  const colors = Array(guess.length).fill("");
 
-  const rows = [
-    keys.slice(0, 10),
-    keys.slice(10, 19),
-    keys.slice(19)
-  ];
-
-  rows.forEach(row => {
-    const rowDiv = document.createElement("div");
-    rowDiv.className = "keyboard-row";
-    row.forEach(key => {
-      const button = document.createElement("button");
-      button.textContent = key;
-      button.onclick = () => handleKeyPress(key);
-      rowDiv.appendChild(button);
-    });
-    keyboardContainer.appendChild(rowDiv);
-  });
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "⌫";
-  deleteBtn.onclick = deleteLetter;
-
-  const enterBtn = document.createElement("button");
-  enterBtn.textContent = "⏎";
-  enterBtn.onclick = submitGuess;
-
-  const rowDiv = document.createElement("div");
-  rowDiv.className = "keyboard-row";
-  rowDiv.appendChild(deleteBtn);
-  rowDiv.appendChild(enterBtn);
-  keyboardContainer.appendChild(rowDiv);
-}
-
-function deleteLetter() {
-  if (currentGuess.length > 0) {
-    currentGuess = currentGuess.slice(0, -1);
-    const boxes = document.querySelectorAll(".box");
-    boxes[currentRow * wordLength + currentGuess.length].textContent = "";
-  }
-}
-
-function submitGuess() {
-  if (currentGuess.length !== wordLength) {
-    alert("الكلمة غير مكتملة.");
-    return;
-  }
-
-  const boxes = document.querySelectorAll(".box");
-  for (let i = 0; i < wordLength; i++) {
-    const box = boxes[currentRow * wordLength + i];
-    if (currentGuess[i] === targetWord[i]) {
-      box.classList.add("correct");
-    } else if (targetWord.includes(currentGuess[i])) {
-      box.classList.add("close");
-    } else {
-      box.classList.add("wrong");
+  for (let i = 0; i < guess.length; i++) {
+    if (guess[i] === tempTarget[i]) {
+      colors[i] = "correct";
+      tempTarget[i] = null;
     }
   }
 
-  if (currentGuess === targetWord) {
-    endGame("🎉 تهانينا! لقد فزت!");
-    return;
+  for (let i = 0; i < guess.length; i++) {
+    if (colors[i] === "") {
+      const index = tempTarget.indexOf(guess[i]);
+      if (index !== -1) {
+        colors[i] = "repeat";
+        tempTarget[index] = null;
+      } else {
+        colors[i] = "wrong";
+      }
+    }
   }
 
-  currentRow++;
-  currentGuess = "";
+  for (let i = 0; i < guess.length; i++) {
+    const cell = document.getElementsByClassName("cell")[startIdx + i];
+    cell.textContent = guess[i];
+    cell.classList.add(colors[i]);
+    updateKeyColor(guess[i], colors[i]);
+  }
 
-  if (currentRow === maxGuesses) {
-    endGame(`😞 انتهت المحاولات. الكلمة كانت: ${targetWord}`);
+  currentTry++;
+  guessInput.value = "";
+
+  if (guess === targetWord) {
+    setTimeout(() => showResult(true), 100);
+  } else if (currentTry >= maxTries) {
+    setTimeout(() => showResult(false), 100);
   }
 }
 
-function endGame(message) {
-  setTimeout(() => {
-    const overlay = document.createElement("div");
-    overlay.id = "gameResultOverlay";
-    overlay.style.display = "flex";
-    overlay.innerHTML = `
-      <div class="message">
-        <div style="font-size: 40px;">🎉</div>
-        <p>${message}</p>
-        <button onclick="restartGame()" style="margin-top: 20px; font-size: 18px; padding: 10px 20px;">🔁 إعادة اللعب</button>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-  }, 300);
+function updateKeyColor(letter, status) {
+  const keys = document.getElementsByClassName("key");
+  for (let key of keys) {
+    if (key.textContent === letter) {
+      key.classList.remove("correct", "wrong-place", "wrong", "repeat");
+      key.classList.add(status);
+    }
+  }
 }
 
-function restartGame() {
-  location.reload();
+function showResult(won) {
+  const resultBox = document.getElementById("resultMessage");
+  if (won) {
+    resultBox.innerHTML = `🎉 لقد فزت! <br> الكلمة هي: <strong>${targetWord}</strong>`;
+  } else {
+    resultBox.innerHTML = `❌ انتهت المحاولات. الكلمة كانت: <strong>${targetWord}</strong>`;
+  }
+  resultBox.style.display = "block";
+  document.getElementById("restartBtn").style.display = "inline-block";
 }
