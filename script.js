@@ -95,21 +95,38 @@ function updateInputFromBoard() {
   document.getElementById("guessInput").value = guess;
 }
 
-function checkGuess() {
-  const guessInput = document.getElementById("guessInput");
-  let guess = guessInput.value.trim();
-  if (guess.length !== targetWord.length) return;
+function checkGuess(guess) {
+  const colors = Array(secretWord.length).fill("");
+  const tempTarget = secretWord.split("");
+  const letterCount = {};
 
-  const startIdx = currentTry * targetWord.length;
-  const tempTarget = targetWord.split("");
-  const guessLetters = guess.split("");
-  const colors = Array(guess.length).fill("");
+  // حساب عدد مرات كل حرف في الكلمة السرية
+  for (let letter of secretWord) {
+    letterCount[letter] = (letterCount[letter] || 0) + 1;
+  }
 
+  // الخطوة 1: تحديد الحروف الصحيحة (أخضر)
   for (let i = 0; i < guess.length; i++) {
-    if (guess[i] === tempTarget[i]) {
+    if (guess[i] === secretWord[i]) {
       colors[i] = "correct";
-      tempTarget[i] = null;
+      letterCount[guess[i]]--;
+      tempTarget[i] = null; // نحذفه عشان ما نحسبه مرتين
     }
+  }
+
+  // الخطوة 2: تحديد الحروف الموجودة في مكان غلط (أصفر) أو مكررة (أزرق)
+  for (let i = 0; i < guess.length; i++) {
+    if (colors[i] === "") {
+      if (letterCount[guess[i]] > 0) {
+        colors[i] = "present"; // أصفر
+        letterCount[guess[i]]--;
+      } else {
+        colors[i] = "repeat"; // أزرق
+      }
+    }
+
+  return colors;
+}
   }
 
   for (let i = 0; i < guess.length; i++) {
