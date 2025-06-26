@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>لعبة الكلمة</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>لعبة الكلمة السرية</h1>
+  <div id="wordInputSection">
+    <input type="text" id="targetWordInput" placeholder="أدخل الكلمة السرية" maxlength="10">
+    <button onclick="setTargetWord()">ابدأ اللعبة</button>
+  </div>
+  <div id="boardContainer" style="display:none;">
+    <div id="board"></div>
+    <input type="text" id="guessInput" maxlength="10" placeholder="خمن الكلمة" />
+    <button onclick="checkGuess()">تحقق</button>
+    <div id="keyboard"></div>
+  </div>
+  <div id="resultMessage"></div><br><button id="restartBtn" style="display:none;" onclick="location.reload()">🔄 إعادة اللعب</button>
+  <script src="script.js"></script>
+</body>
+</html>
