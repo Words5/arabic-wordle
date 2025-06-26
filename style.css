@@ -1,98 +1,79 @@
-
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: radial-gradient(circle at top, #222, #000);
   color: white;
+  font-family: Tahoma, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
 }
 
 #board {
-  margin: 20px auto;
   display: grid;
-  grid-template-columns: repeat(5, 50px);
-  gap: 5px;
-  width: max-content;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.box {
-  width: 50px;
-  height: 50px;
-  background-color: #ffffff;
-  border: 2px solid #ccc;
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #555;
   font-size: 24px;
-  line-height: 50px;
+  font-weight: bold;
   text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+  display: inline-block;
+  background-color: #111;
+  border-radius: 8px;
 }
 
 .correct {
   background-color: green;
-  color: white;
 }
-
-.close {
+.wrong-place {
   background-color: orange;
-  color: white;
 }
-
 .wrong {
-  background-color: gray;
-  color: white;
+  background-color: #444;
+}
+.repeat {
+  background-color: #007bff;
 }
 
-#restartButton {
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 10px;
+.key {
+  display: inline-block;
+  margin: 3px;
+  padding: 10px 12px;
+  background-color: #333;
+  border-radius: 6px;
   cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+}
+.key.correct {
+  background-color: green;
+}
+.key.wrong-place {
+  background-color: orange;
+}
+.key.wrong {
+  background-color: #444;
+}
+.key.repeat {
+  background-color: #007bff;
 }
 
-#restartButton:hover {
-  background-color: #45a049;
-}
-
-.keyboard-row {
-  display: flex;
-  justify-content: center;
-  margin: 5px 0;
-}
-
-.keyboard-row button {
-  margin: 2px;
-  flex: 1;
-  max-width: 40px;
-  height: 40px;
-  font-size: 16px;
-}
-
-#gameResultOverlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  color: #fff;
+#resultMessage {
   font-size: 24px;
-  flex-direction: column;
+  margin-top: 20px;
 }
-
-#gameResultOverlay .message {
-  background: linear-gradient(135deg, #1e90ff, #00bfff);
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 0 30px #00bfff;
-  text-align: center;
-  animation: popIn 0.5s ease-in-out;
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.5); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+#resultMessage strong {
+  color: #00ffff;
+  font-size: 32px;
 }
