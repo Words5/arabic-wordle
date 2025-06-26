@@ -32,9 +32,9 @@ function createKeyboard() {
   keyboard.innerHTML = "";
 
   const rows = [
-    "ضصثقفغعهخحج",
-    "شسيبلاتنمكط",
-    "زرذدأءؤئوىة"
+    "جحخهعغفقثصض",
+    "طكمنتالبيسش",
+    "دظزوةىرؤءذ"
   ];
 
   rows.forEach(row => {
