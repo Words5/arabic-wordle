@@ -15,81 +15,119 @@
       position: relative;
       overflow-x: hidden;
     }
+
     .overlay-text {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 10rem;
+      font-size: 8rem;
       font-weight: bold;
       color: rgba(255,255,255,0.03);
       pointer-events: none;
       user-select: none;
       z-index: 0;
     }
+
     .secret-input {
       position: relative;
       z-index: 2;
-      margin-top: 25vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 0 20px;
     }
-    .secret-input input {
+
+    .secret-input h1 {
       font-size: 2rem;
-      padding: 20px 30px;
+      margin-bottom: 25px;
+    }
+
+    .secret-input input {
+      font-size: 1.5rem;
+      padding: 15px 20px;
       border-radius: 12px;
       text-align: center;
-      width: 80%;
-      max-width: 400px;
+      width: 100%;
+      max-width: 320px;
       border: none;
       outline: none;
     }
+
     .secret-input button {
       margin-top: 20px;
-      font-size: 2rem;
-      padding: 15px 40px;
+      font-size: 1.4rem;
+      padding: 12px 30px;
       border-radius: 10px;
       background-color: #4caf50;
       color: white;
       border: none;
       cursor: pointer;
     }
+
     #game {
       display: none;
       margin-top: 30px;
       z-index: 2;
       position: relative;
     }
+
     #resultMessage {
       display: none;
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: bold;
       margin-top: 30px;
+      padding: 0 20px;
     }
+
     #restartBtn {
       display: none;
       margin-top: 20px;
-      font-size: 1.5rem;
-      padding: 10px 30px;
+      font-size: 1.2rem;
+      padding: 10px 25px;
       border-radius: 10px;
       background-color: #2196f3;
       color: white;
       border: none;
       cursor: pointer;
     }
+
+    @media (min-width: 768px) {
+      .overlay-text {
+        font-size: 12rem;
+      }
+
+      .secret-input h1 {
+        font-size: 3rem;
+      }
+
+      .secret-input input {
+        font-size: 2rem;
+      }
+
+      .secret-input button {
+        font-size: 2rem;
+      }
+
+      #resultMessage {
+        font-size: 2.5rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- الخلفية -->
   <div class="overlay-text">WORDS</div>
 
-  <!-- إدخال الكلمة السرية -->
+  <!-- واجهة إدخال الكلمة السرية -->
   <div class="secret-input">
-    <h1 style="font-size: 3rem; margin-bottom: 30px;">🎯 لعبة الكلمة السرية</h1>
+    <h1>🎯 لعبة الكلمة السرية</h1>
     <input type="text" id="secretWord" placeholder="ادخل الكلمة السرية">
-    <br>
     <button onclick="startGame()">ابدأ</button>
   </div>
 
-  <!-- واجهة اللعبة -->
+  <!-- اللعبة -->
   <div id="game">
     <div id="board"></div>
     <div id="keyboard"></div>
@@ -97,10 +135,10 @@
     <button id="restartBtn" onclick="location.reload()">🔄 إعادة اللعب</button>
   </div>
 
-  <!-- سكربت اللعبة -->
   <script src="script.js"></script>
 
-  <!-- مؤثر confetti -->
+  <!-- مؤثر الفوز -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     function confettiEffect() {
       const duration = 1 * 1000;
@@ -124,6 +162,5 @@
       }, 250);
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
 </html>
