@@ -1,38 +1,49 @@
-body {
-  background: radial-gradient(circle at top, #222, #000);
+/* خلفية متناسقة */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #111, #000);
   color: white;
   font-family: Tahoma, sans-serif;
   text-align: center;
-  margin: 0;
-  padding: 20px;
+  overflow-x: hidden;
 }
 
+/* حاوية وسطية */
 .container {
-  max-width: 500px;
-  margin: auto;
+  max-width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* مربعات اللعبة */
 #board {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
   margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  max-width: 100%;
 }
 
+/* خلية حرف */
 .cell {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border: 2px solid #555;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   text-align: center;
-  vertical-align: middle;
-  line-height: 40px;
-  display: inline-block;
+  line-height: 50px;
   background-color: #111;
   border-radius: 8px;
 }
 
+/* ألوان النتائج */
 .correct {
   background-color: green;
 }
@@ -46,15 +57,25 @@ body {
   background-color: #007bff;
 }
 
+/* كيبورد */
+#keyboard {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
 .key {
   display: inline-block;
-  margin: 3px;
-  padding: 10px 12px;
+  margin: 4px;
+  padding: 12px 14px;
   background-color: #333;
   border-radius: 6px;
   cursor: pointer;
   user-select: none;
   font-size: 18px;
+  min-width: 40px;
 }
 .key.correct {
   background-color: green;
@@ -69,6 +90,7 @@ body {
   background-color: #007bff;
 }
 
+/* نتيجة الفوز */
 #resultMessage {
   font-size: 24px;
   margin-top: 20px;
@@ -78,29 +100,32 @@ body {
   font-size: 32px;
 }
 
-#keyboard > div {
-  margin: 4px 0;
-}
-
+/* تصميم الصفحة الأولى */
 .landing-bg {
-  background: linear-gradient(135deg, #111 0%, #000 100%);
+  background: linear-gradient(135deg, #111, #000);
   position: relative;
-  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* كلمة WORDS في الخلف */
 .overlay-text {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 120px;
+  font-size: 100px;
   color: rgba(255, 255, 255, 0.05);
   font-weight: bold;
   z-index: 0;
   user-select: none;
+  pointer-events: none;
   text-shadow: 4px 4px 10px rgba(255, 255, 255, 0.05);
 }
 
+/* إدخال الكلمة السرية */
 .special-input {
   z-index: 1;
   position: relative;
@@ -108,7 +133,7 @@ body {
 }
 
 .special-input input {
-  font-size: 28px;
+  font-size: 30px;
   padding: 16px;
   width: 80%;
   border-radius: 12px;
