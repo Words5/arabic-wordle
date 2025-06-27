@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة الكلمة السرية</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="overlay-text">WORDS</div>
+  <div class="container" id="startScreen">
+    <h1 class="game-title">🎯 لعبة الكلمة السرية</h1>
+    <div class="secret-input special-input">
+      <input type="text" id="secretWord" placeholder="ادخل الكلمة السرية" maxlength="12">
+      <button onclick="startGame()">ابدأ</button>
+    </div>
+  </div>
+  <div id="game" style="display:none;">
+    <div id="board"></div>
+    <div id="keyboard"></div>
+    <div id="resultMessage"></div>
+    <button id="restartBtn" style="display:none;" onclick="location.reload()">🔄 إعادة اللعب</button>
+  </div>
+  <input id="guessInput" type="text" style="opacity:0; position:absolute;" oninput="handleGuessTyping()" />
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</body>
+</html>
