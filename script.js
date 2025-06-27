@@ -6,9 +6,9 @@ let currentFilledIndex = 0;
 function startGame() {
   const input = document.getElementById("secretWord");
   targetWord = input.value.trim();
-  if (targetWord === "") return;
+  if (targetWord === "" || /[^ء-ي]/.test(targetWord)) return;
 
-  document.querySelector(".secret-input").style.display = "none";
+  document.querySelector(".special-input").style.display = "none";
   document.getElementById("game").style.display = "block";
   createBoard();
   createKeyboard();
@@ -39,6 +39,8 @@ function createKeyboard() {
 
   rows.forEach(row => {
     const rowDiv = document.createElement("div");
+    rowDiv.style.display = "flex";
+    rowDiv.style.justifyContent = "center";
     for (let letter of row) {
       const key = document.createElement("div");
       key.className = "key";
@@ -50,6 +52,8 @@ function createKeyboard() {
   });
 
   const controlRow = document.createElement("div");
+  controlRow.style.display = "flex";
+  controlRow.style.justifyContent = "center";
 
   const backspaceKey = document.createElement("div");
   backspaceKey.className = "key";
@@ -67,13 +71,15 @@ function createKeyboard() {
 }
 
 function handleKeyPress(letter) {
-  if (currentFilledIndex >= (currentTry + 1) * targetWord.length) return;
+  if (currentTry >= maxTries) return;
+  const limit = (currentTry + 1) * targetWord.length;
+  if (currentFilledIndex >= limit) return;
+
   const cellIndex = currentTry * targetWord.length + (currentFilledIndex % targetWord.length);
   const cell = document.getElementsByClassName("cell")[cellIndex];
   cell.textContent = letter;
   cell.dataset.letter = letter;
   currentFilledIndex++;
-  updateInputFromBoard();
 }
 
 function handleBackspace() {
@@ -83,21 +89,19 @@ function handleBackspace() {
   const cell = document.getElementsByClassName("cell")[cellIndex];
   cell.textContent = "";
   cell.dataset.letter = "";
-  updateInputFromBoard();
 }
 
-function updateInputFromBoard() {
+function getGuessFromBoard() {
   let guess = "";
   for (let i = 0; i < targetWord.length; i++) {
     const cell = document.getElementsByClassName("cell")[currentTry * targetWord.length + i];
     guess += cell.dataset.letter || "";
   }
-  document.getElementById("guessInput").value = guess;
+  return guess;
 }
 
 function checkGuess() {
-  const guessInput = document.getElementById("guessInput");
-  let guess = guessInput.value.trim();
+  const guess = getGuessFromBoard();
   if (guess.length !== targetWord.length) return;
 
   const startIdx = currentTry * targetWord.length;
@@ -105,6 +109,7 @@ function checkGuess() {
   const guessLetters = guess.split("");
   const colors = Array(guess.length).fill("");
 
+  // صح في المكان
   for (let i = 0; i < guess.length; i++) {
     if (guess[i] === tempTarget[i]) {
       colors[i] = "correct";
@@ -112,6 +117,7 @@ function checkGuess() {
     }
   }
 
+  // موجود لكن بمكان خطأ
   for (let i = 0; i < guess.length; i++) {
     if (colors[i] === "") {
       const index = tempTarget.indexOf(guess[i]);
@@ -124,20 +130,19 @@ function checkGuess() {
     }
   }
 
+  // تلوين الخانات
   for (let i = 0; i < guess.length; i++) {
     const cell = document.getElementsByClassName("cell")[startIdx + i];
-    cell.textContent = guess[i];
     cell.classList.add(colors[i]);
     updateKeyColor(guess[i], colors[i]);
   }
 
   currentTry++;
-  guessInput.value = "";
 
   if (guess === targetWord) {
-    setTimeout(() => showResult(true), 100);
+    setTimeout(() => showResult(true), 300);
   } else if (currentTry >= maxTries) {
-    setTimeout(() => showResult(false), 100);
+    setTimeout(() => showResult(false), 300);
   }
 }
 
