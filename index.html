@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تحدي الكلمة ⚔️</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>إعداد التحدي</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="home">
+<body class="start-screen">
   <div class="container">
-    <h1>⚔️ تحدي الكلمة</h1>
-    <input type="text" id="word1" placeholder="كلمة فريق 1" maxlength="10" />
-    <input type="text" id="word2" placeholder="كلمة فريق 2" maxlength="10" />
-    <input type="number" id="attempts" placeholder="عدد المحاولات" min="1" max="10" />
-    <button onclick="startGame()">ابدأ التحدي</button>
+    <h1>🔠 تحدي الكلمات 🔠</h1>
+    <div class="input-group">
+      <label>كلمة الفريق الأحمر:</label>
+      <input type="text" id="word1" maxlength="10">
+    </div>
+    <div class="input-group">
+      <label>كلمة الفريق الأزرق:</label>
+      <input type="text" id="word2" maxlength="10">
+    </div>
+    <div class="input-group">
+      <label>عدد المحاولات:</label>
+      <input type="number" id="attempts" min="1" max="10" value="6">
+    </div>
+    <button onclick="startGame()">ابدأ التحدي 🚀</button>
   </div>
+
   <script>
     function startGame() {
-      const word1 = document.getElementById('word1').value.trim();
-      const word2 = document.getElementById('word2').value.trim();
-      const attempts = parseInt(document.getElementById('attempts').value);
+      const word1 = document.getElementById("word1").value.trim();
+      const word2 = document.getElementById("word2").value.trim();
+      const attempts = parseInt(document.getElementById("attempts").value);
 
-      if (word1 && word2 && attempts > 0) {
-        localStorage.setItem('word1', word1);
-        localStorage.setItem('word2', word2);
-        localStorage.setItem('attempts', attempts);
-        window.location.href = "game.html";
-      } else {
-        alert("الرجاء تعبئة كل الحقول بشكل صحيح.");
+      if (!word1 || !word2 || isNaN(attempts)) {
+        alert("الرجاء إدخال الكلمات والمحاولات بشكل صحيح");
+        return;
       }
+
+      localStorage.setItem("word1", word1);
+      localStorage.setItem("word2", word2);
+      localStorage.setItem("attempts", attempts);
+      window.location.href = "game.html";
     }
   </script>
 </body>
