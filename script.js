@@ -1,41 +1,20 @@
-const keyboardLayout = [ 'جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ' ];
+const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
 
 let currentTeam = 1;
-let word1 = '';
-let word2 = '';
-let attempts = 6;
+let word1 = localStorage.getItem('word1');
+let word2 = localStorage.getItem('word2');
+let attempts = parseInt(localStorage.getItem('attempts')) || 6;
 
-let guesses1 = [];
-let guesses2 = [];
+let guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill(''));
+let guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
 let currentRow = [0, 0];
 let currentCol = [0, 0];
-
 let keyboardColors = { 1: {}, 2: {} };
-
-function startGame() {
-  word1 = document.getElementById('word1').value.trim();
-  word2 = document.getElementById('word2').value.trim();
-  attempts = parseInt(document.getElementById('attempts').value);
-
-  if (!word1 || !word2 || word1.length !== word2.length) {
-    alert('الكلمتان يجب أن تكونا بنفس الطول!');
-    return;
-  }
-
-  document.getElementById('setup').style.display = 'none';
-  document.getElementById('game').style.display = 'block';
-
-  guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill(''));
-  guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
-
-  createBoard('board1', word1.length, attempts);
-  createBoard('board2', word2.length, attempts);
-  renderKeyboard();
-}
 
 function createBoard(containerId, wordLength, attempts) {
   const board = document.getElementById(containerId);
   board.style.gridTemplateColumns = `repeat(${wordLength}, 40px)`;
+
   for (let i = 0; i < attempts * wordLength; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
@@ -154,8 +133,7 @@ function submitGuess() {
   for (let i = 0; i < word.length; i++) {
     const cellId = `board${currentTeam}-cell-${row * word.length + i}`;
     const cell = document.getElementById(cellId);
-    cell.style.backgroundColor = colors[i] === 'correct' ? '#6aaa64' : colors[i] === 'present' ? '#c9b458' : '#787c7e';
-    cell.style.color = 'white';
+    cell.classList.add(colors[i]);
   }
 
   updateKeyboardColors();
@@ -170,7 +148,6 @@ function submitGuess() {
 
   if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
     alert('انتهت المحاولات! تعادل 🤝');
-    return;
   }
 
   toggleTurn();
@@ -184,12 +161,15 @@ function toggleTurn() {
   updateKeyboardColors();
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    submitGuess();
-  } else if (e.key === 'Backspace') {
-    deleteLetter();
-  } else if (/^[؀-ۿ]$/.test(e.key)) {
-    handleKey(e.key);
-  }
-});
+function handleKeyboardEvents(e) {
+  if (e.key === 'Enter') submitGuess();
+  else if (e.key === 'Backspace') deleteLetter();
+  else if (/^[\u0600-\u06FF]$/.test(e.key)) handleKey(e.key);
+}
+
+window.onload = () => {
+  createBoard('board1', word1.length, attempts);
+  createBoard('board2', word2.length, attempts);
+  renderKeyboard();
+  document.addEventListener('keydown', handleKeyboardEvents);
+};
