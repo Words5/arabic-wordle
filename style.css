@@ -8,9 +8,35 @@ body {
   min-height: 100vh;
 }
 
+.container {
+  max-width: 400px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #e63946;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
 .header {
   padding: 20px 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0,0,0,0.2);
   font-size: 1.5em;
 }
 
@@ -32,6 +58,33 @@ body {
   gap: 5px;
   justify-content: center;
   margin-top: 10px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: black;
+}
+
+.correct {
+  background-color: #6aaa64 !important;
+  color: white !important;
+}
+
+.present {
+  background-color: #c9b458 !important;
+  color: white !important;
+}
+
+.absent {
+  background-color: #787c7e !important;
+  color: white !important;
 }
 
 .turn-indicator {
@@ -56,7 +109,7 @@ body {
 .keyboard-container {
   margin-top: 30px;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0,0,0,0.1);
   border-top: 1px solid #fff;
 }
 
@@ -69,17 +122,9 @@ body {
   cursor: pointer;
 }
 
-.key.correct {
-  background-color: #6aaa64;
-  color: white;
-}
-
-.key.present {
-  background-color: #c9b458;
-  color: white;
-}
-
-.key.absent {
-  background-color: #787c7e;
-  color: white;
+.start-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
