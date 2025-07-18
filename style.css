@@ -1,88 +1,41 @@
-body {
+.setup-body {
   background: linear-gradient(to right, #1d3557, #e63946);
   font-family: 'Cairo', sans-serif;
   color: white;
-  margin: 0;
-  padding: 0;
   text-align: center;
-  min-height: 100vh;
+  padding: 30px;
 }
 
-.header {
-  padding: 20px 0;
-  background-color: rgba(0,0,0,0.2);
-  font-size: 1.5em;
-}
-
-.game-area {
-  display: flex;
-  justify-content: space-around;
-  padding: 20px;
-  gap: 30px;
-  flex-wrap: wrap;
-}
-
-.team {
-  flex: 1;
+.setup-container {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  border-radius: 16px;
   max-width: 400px;
+  margin: auto;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
-.board {
-  display: grid;
-  gap: 5px;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.turn-indicator {
-  height: 20px;
-  border-radius: 8px;
-  margin-top: 10px;
-  opacity: 0.4;
-}
-
-.team1.active .turn-indicator {
-  background-color: #ff3b3b;
-  opacity: 1;
-  box-shadow: 0 0 10px 3px #ff3b3b;
-}
-
-.team2.active .turn-indicator {
-  background-color: #4da6ff;
-  opacity: 1;
-  box-shadow: 0 0 10px 3px #4da6ff;
-}
-
-.keyboard-container {
-  margin-top: 30px;
+.setup-container input {
+  display: block;
+  margin: 10px auto 20px;
   padding: 10px;
-  background-color: rgba(0,0,0,0.1);
-  border-top: 1px solid #fff;
-}
-
-.key {
-  margin: 4px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 6px;
   font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  width: 90%;
+}
+
+.setup-container button {
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f1faee;
+  color: #1d3557;
   cursor: pointer;
-  background-color: #eee;
-  color: black;
-  min-width: 40px;
+  transition: 0.3s;
 }
 
-.key.correct {
-  background-color: #6aaa64;
-  color: white;
+.setup-container button:hover {
+  background-color: #a8dadc;
 }
-
-.key.present {
-  background-color: #c9b458;
-  color: white;
-}
-
-.key.absent {
-  background-color: #787c7e;
-  color: white;
-    }
