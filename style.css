@@ -8,59 +8,49 @@ body {
   min-height: 100vh;
 }
 
-.header {
-  padding: 20px 0;
+.page {
+  padding: 20px;
+}
+
+.form-container {
   background-color: rgba(0,0,0,0.2);
-  font-size: 1.5em;
-}
-
-.setup-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.setup-container {
-  background-color: rgba(0,0,0,0.3);
+  border-radius: 12px;
   padding: 30px;
-  margin: 60px auto;
-  width: 90%;
   max-width: 400px;
-  border-radius: 16px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  margin: 50px auto;
 }
 
-.setup-container input {
-  width: 100%;
+input {
+  width: 90%;
   padding: 10px;
-  margin-bottom: 15px;
-  border: none;
+  margin: 10px;
+  font-size: 18px;
   border-radius: 6px;
-  font-size: 16px;
+  border: none;
 }
 
-.setup-container button {
-  padding: 10px 20px;
+button {
+  padding: 12px 20px;
   font-size: 18px;
   background-color: #f1faee;
   color: #1d3557;
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+  margin-top: 15px;
 }
 
-.setup-container button:hover {
-  background-color: #e63946;
-  color: white;
+.header {
+  padding: 20px 0;
+  font-size: 1.5em;
 }
 
 .game-area {
   display: flex;
   justify-content: space-around;
   padding: 20px;
-  gap: 30px;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
 .team {
@@ -75,38 +65,29 @@ body {
   margin-top: 10px;
 }
 
-.turn-indicator {
-  height: 20px;
-  border-radius: 8px;
-  margin-top: 10px;
-  opacity: 0.4;
-}
-
-.team1.active .turn-indicator {
-  background-color: #ff3b3b;
-  opacity: 1;
-  box-shadow: 0 0 10px 3px #ff3b3b;
-}
-
-.team2.active .turn-indicator {
-  background-color: #4da6ff;
-  opacity: 1;
-  box-shadow: 0 0 10px 3px #4da6ff;
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .keyboard-container {
-  margin-top: 30px;
-  padding: 10px;
-  background-color: rgba(0,0,0,0.1);
-  border-top: 1px solid #fff;
+  margin-top: 20px;
 }
 
 .key {
-  margin: 4px;
+  margin: 3px;
   padding: 10px 14px;
-  border: none;
-  border-radius: 6px;
   font-size: 18px;
+  border-radius: 6px;
+  border: none;
   cursor: pointer;
 }
 
@@ -125,18 +106,16 @@ body {
   color: white;
 }
 
-.restart-button {
-  background-color: #f1faee;
-  color: #1d3557;
-  font-size: 18px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s ease;
-}
-.restart-button:hover {
+.team1.active .turn-indicator {
   background-color: #e63946;
-  color: white;
-  }
+  height: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.team2.active .turn-indicator {
+  background-color: #4da6ff;
+  height: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
