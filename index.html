@@ -1,43 +1,32 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تحدي الكلمة - البداية</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>تحدي الكلمة - إدخال الكلمات</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="header">
-    <h1>🔥 تحدي الكلمة - الإعداد</h1>
-  </div>
-
-  <div style="padding: 20px;">
-    <label>كلمة فريق 1:</label>
-    <input type="text" id="word1" maxlength="10"><br><br>
-
-    <label>كلمة فريق 2:</label>
-    <input type="text" id="word2" maxlength="10"><br><br>
-
-    <label>عدد المحاولات:</label>
-    <input type="number" id="attempts" value="6" min="1" max="10"><br><br>
-
-    <button onclick="startGame()">ابدأ التحدي 💥</button>
+<body class="setup-page">
+  <div class="header">📝 إدخال كلمات التحدي</div>
+  <div class="setup-container">
+    <input type="text" id="word1" placeholder="كلمة فريق 1 (أحمر)" />
+    <input type="text" id="word2" placeholder="كلمة فريق 2 (أزرق)" />
+    <input type="number" id="attempts" placeholder="عدد المحاولات (مثلاً 6)" />
+    <button onclick="startGame()">ابدأ التحدي</button>
   </div>
 
   <script>
     function startGame() {
       const w1 = document.getElementById('word1').value.trim();
       const w2 = document.getElementById('word2').value.trim();
-      const attempts = parseInt(document.getElementById('attempts').value);
-
-      if (!w1 || !w2 || isNaN(attempts)) {
-        alert('يرجى تعبئة جميع الحقول.');
-        return;
+      const att = parseInt(document.getElementById('attempts').value);
+      if (w1 && w2 && att > 0) {
+        localStorage.setItem('word1', w1);
+        localStorage.setItem('word2', w2);
+        localStorage.setItem('attempts', att);
+        window.location.href = 'game.html';
+      } else {
+        alert('يرجى تعبئة جميع الحقول بشكل صحيح.');
       }
-
-      localStorage.setItem('word1', w1);
-      localStorage.setItem('word2', w2);
-      localStorage.setItem('attempts', attempts);
-      window.location.href = "game.html";
     }
   </script>
 </body>
