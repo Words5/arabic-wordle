@@ -3,49 +3,95 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تحدي الكلمة</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>إدخال الكلمات - تحدي الكلمة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to right, #1d3557, #e63946);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: white;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2em;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 1.1em;
+      background-color: #f1faee;
+      color: #1d3557;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #a8dadc;
+    }
+  </style>
 </head>
 <body>
-  <div class="header">
-    <h1>⚔️ تحدي الكلمة</h1>
-  </div>
+  <div class="container">
+    <h1>تحدي الكلمة ⚔️</h1>
+    <label for="word1">أدخل كلمة فريق 1 🔴:</label>
+    <input type="text" id="word1" maxlength="10" autocomplete="off" />
 
-  <div id="setup" class="setup-screen">
-    <h2>🔴 فريق 1: اختر الكلمة</h2>
-    <input type="text" id="word1" maxlength="6" />
-    
-    <h2>🔵 فريق 2: اختر الكلمة</h2>
-    <input type="text" id="word2" maxlength="6" />
-
-    <label>عدد المحاولات:</label>
-    <input type="number" id="attempts" value="6" min="1" max="10" />
+    <label for="word2">أدخل كلمة فريق 2 🔵:</label>
+    <input type="text" id="word2" maxlength="10" autocomplete="off" />
 
     <button onclick="startGame()">ابدأ اللعبة</button>
   </div>
 
-  <div id="game" style="display: none;">
-    <div class="header">
-      <h2 id="current-turn">دور: فريق 1 🔴</h2>
-    </div>
+  <script>
+    function startGame() {
+      const word1 = document.getElementById('word1').value.trim();
+      const word2 = document.getElementById('word2').value.trim();
 
-    <div class="game-area">
-      <div class="team team1 active">
-        <h3>فريق 1 🔴</h3>
-        <div class="turn-indicator"></div>
-        <div id="board1" class="board"></div>
-      </div>
+      if (word1.length < 3 || word2.length < 3) {
+        alert('الكلمات يجب أن تكون من 3 أحرف أو أكثر!');
+        return;
+      }
 
-      <div class="team team2">
-        <h3>فريق 2 🔵</h3>
-        <div class="turn-indicator"></div>
-        <div id="board2" class="board"></div>
-      </div>
-    </div>
-
-    <div id="keyboard" class="keyboard-container"></div>
-  </div>
-
-  <script src="script.js"></script>
+      localStorage.setItem('word1', word1);
+      localStorage.setItem('word2', word2);
+      localStorage.setItem('attempts', 6);
+      window.location.href = "game.html";
+    }
+  </script>
 </body>
 </html>
