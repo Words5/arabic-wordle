@@ -2,39 +2,65 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>تحدي الكلمة ⚔️ - البداية</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إعداد التحدي</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    input, select, button {
+      margin: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1em;
+    }
+    button {
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>تحدي الكلمة ⚔️</h1>
-    <form id="word-form">
-      <label>كلمة فريق 1:</label>
-      <input type="text" id="word1" required minlength="5" maxlength="6" />
-      <br />
-      <label>كلمة فريق 2:</label>
-      <input type="text" id="word2" required minlength="5" maxlength="6" />
-      <br />
-      <label>عدد المحاولات:</label>
-      <input type="number" id="attempts" min="1" max="10" value="6" required />
-      <br />
-      <button type="submit">ابدأ اللعبة</button>
-    </form>
-  </div>
+  <h1>إعداد التحدي 🧠⚔️</h1>
+  <input type="text" id="word1" placeholder="كلمة فريق 1 🔴" maxlength="6"/>
+  <input type="text" id="word2" placeholder="كلمة فريق 2 🔵" maxlength="6"/>
+  <select id="attempts">
+    <option value="4">4 محاولات</option>
+    <option value="5">5 محاولات</option>
+    <option value="6" selected>6 محاولات</option>
+    <option value="7">7 محاولات</option>
+  </select>
+  <button onclick="startGame()">ابدأ التحدي</button>
 
   <script>
-    document.getElementById("word-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const word1 = document.getElementById("word1").value.trim().toLowerCase();
-      const word2 = document.getElementById("word2").value.trim().toLowerCase();
-      const attempts = document.getElementById("attempts").value;
-
-      localStorage.setItem("word1", word1);
-      localStorage.setItem("word2", word2);
-      localStorage.setItem("attempts", attempts);
-
-      window.location.href = "game.html";
-    });
+    function startGame() {
+      const word1 = document.getElementById('word1').value.trim();
+      const word2 = document.getElementById('word2').value.trim();
+      const attempts = document.getElementById('attempts').value;
+      if (word1.length < 5 || word2.length < 5) {
+        alert('الكلمات يجب أن تكون من 5 إلى 6 أحرف');
+        return;
+      }
+      localStorage.setItem('word1', word1);
+      localStorage.setItem('word2', word2);
+      localStorage.setItem('attempts', attempts);
+      window.location.href = 'game.html';
+    }
   </script>
 </body>
 </html>
