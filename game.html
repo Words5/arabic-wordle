@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>اللعبة</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>كلمة السر - اللعب</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="header">
+    <h1>🏆 التحدي بين الفريقين</h1>
     <h2 id="current-turn">دور: فريق 1 🔴</h2>
   </div>
 
   <div class="game-area">
     <div class="team team1 active">
-      <h3>فريق الأحمر</h3>
+      <h3>فريق 1 🔴</h3>
       <div class="turn-indicator"></div>
       <div id="board1" class="board"></div>
     </div>
-
     <div class="team team2">
-      <h3>فريق الأزرق</h3>
+      <h3>فريق 2 🔵</h3>
       <div class="turn-indicator"></div>
       <div id="board2" class="board"></div>
     </div>
   </div>
 
-  <div class="keyboard-container" id="keyboard"></div>
+  <div id="keyboard" class="keyboard-container"></div>
 
-  <div style="margin: 30px;">
-    <button onclick="restartGame()">🔁 إعادة اللعبة</button>
+  <div style="margin-top: 20px;">
+    <button onclick="window.location.href='index.html'">🔄 إعادة اللعبة</button>
   </div>
 
   <script src="game.js"></script>
 </body>
-</html>
+      </html>
