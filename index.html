@@ -23,20 +23,22 @@
 
   <div id="game" class="hidden">
     <div class="board-container">
-      <div>
+      <div class="team1">
         <h2>فريق 1 🔴</h2>
         <div id="board1" class="board"></div>
+        <div class="turn-indicator"></div>
       </div>
-      <div>
+      <div class="team2">
         <h2>🔵 فريق 2</h2>
         <div id="board2" class="board"></div>
+        <div class="turn-indicator"></div>
       </div>
     </div>
+
     <div id="current-turn">دور: فريق 1</div>
-    <div class="keyboard">
-      <input type="text" id="guessInput" maxlength="6" autofocus />
-      <button onclick="submitGuess()">إرسال التخمين</button>
-    </div>
+
+    <div class="keyboard" id="keyboard"></div>
+
     <div id="result"></div>
     <button onclick="location.reload()">🔁 إعادة اللعبة</button>
   </div>
