@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>إدخال الكلمات</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>كلمة السر - البداية</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>لعبة الكلمات</h1>
-
-    <label>كلمة الفريق الأحمر:</label>
-    <input type="text" id="word1" />
-
-    <label>كلمة الفريق الأزرق:</label>
-    <input type="text" id="word2" />
-
-    <label>عدد المحاولات:</label>
-    <input type="number" id="attempts" value="6" />
-
+    <h1>🎯 لعبة كلمة السر 🔠</h1>
+    <div class="form-group">
+      <label>كلمة فريق 1:</label>
+      <input type="text" id="word1" maxlength="10">
+    </div>
+    <div class="form-group">
+      <label>كلمة فريق 2:</label>
+      <input type="text" id="word2" maxlength="10">
+    </div>
+    <div class="form-group">
+      <label>عدد المحاولات:</label>
+      <input type="number" id="attempts" value="6" min="1" max="10">
+    </div>
     <button onclick="startGame()">ابدأ اللعبة</button>
   </div>
 
   <script>
     function startGame() {
-      const word1 = document.getElementById("word1").value.trim();
-      const word2 = document.getElementById("word2").value.trim();
-      const attempts = parseInt(document.getElementById("attempts").value);
+      const word1 = document.getElementById('word1').value.trim();
+      const word2 = document.getElementById('word2').value.trim();
+      const attempts = parseInt(document.getElementById('attempts').value.trim());
 
-      if (word1 && word2 && attempts > 0) {
-        localStorage.setItem("word1", word1);
-        localStorage.setItem("word2", word2);
-        localStorage.setItem("attempts", attempts);
-        window.location.href = "game.html";
-      } else {
-        alert("رجاءً أدخل كلمات صحيحة وعدد محاولات.");
+      if (!word1 || !word2 || isNaN(attempts)) {
+        alert("يرجى إدخال الكلمات والمحاولات بشكل صحيح");
+        return;
       }
+
+      localStorage.setItem('word1', word1);
+      localStorage.setItem('word2', word2);
+      localStorage.setItem('attempts', attempts);
+      window.location.href = "game.html";
     }
   </script>
 </body>
