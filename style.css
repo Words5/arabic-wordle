@@ -1,10 +1,10 @@
 body {
   margin: 0;
   font-family: 'Cairo', sans-serif;
-  background: linear-gradient(to right, #457b9d, #e63946);
+  background: linear-gradient(120deg, #1e3c72, #2a5298);
   color: white;
-  min-height: 100vh;
   text-align: center;
+  min-height: 100vh;
 }
 
 /* شاشة البداية */
@@ -15,22 +15,18 @@ body {
   height: 100vh;
 }
 
-.start-box {
-  background: rgba(0,0,0,0.3);
+.start-container {
+  background: rgba(0,0,0,0.4);
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  width: 300px;
 }
 
-.start-box h1 {
-  font-size: 2em;
-  margin-bottom: 20px;
-}
-
-.start-box input {
+.start-container input {
   display: block;
-  width: 250px;
-  margin: 10px auto;
+  width: 100%;
+  margin: 10px 0;
   padding: 10px;
   font-size: 18px;
   border-radius: 10px;
@@ -38,39 +34,38 @@ body {
   text-align: center;
 }
 
-.start-box button {
-  padding: 12px 30px;
-  font-size: 20px;
+.start-container button {
+  padding: 12px;
+  font-size: 18px;
   border: none;
   border-radius: 10px;
-  background-color: #1d3557;
+  background-color: #1abc9c;
   color: white;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
-/* شاشة اللعبة */
 #game-screen {
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+}
+
+#current-turn {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
 .teams-container {
   display: flex;
-  justify-content: space-around;
-  width: 100%;
-  max-width: 1200px;
+  justify-content: center;
+  gap: 40px;
   flex-wrap: wrap;
 }
 
 .team {
-  width: 48%;
+  width: 300px;
   padding: 10px;
   background-color: rgba(255,255,255,0.05);
-  border-radius: 12px;
-  margin: 10px;
+  border-radius: 10px;
 }
 
 .board {
@@ -78,33 +73,33 @@ body {
   gap: 5px;
   justify-content: center;
   margin: 10px 0;
-  grid-template-columns: repeat(auto-fit, 50px);
+  grid-template-columns: repeat(6, 45px);
 }
 
 .cell {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   background: white;
   color: black;
-  font-size: 22px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .cell.correct {
-  background-color: #6aaa64;
+  background-color: #28a745;
   color: white;
 }
 
 .cell.present {
-  background-color: #c9b458;
+  background-color: #ffc107;
   color: white;
 }
 
 .cell.absent {
-  background-color: #787c7e;
+  background-color: #6c757d;
   color: white;
 }
 
@@ -113,41 +108,26 @@ body {
 }
 
 .key {
-  margin: 6px;
-  padding: 15px 20px;
-  font-size: 22px;
+  margin: 4px;
+  padding: 12px 16px;
+  font-size: 18px;
   border: none;
-  border-radius: 8px;
-  background-color: #eee;
+  border-radius: 6px;
+  background-color: #eeeeee;
   cursor: pointer;
 }
 
 .key.correct {
-  background-color: #6aaa64;
+  background-color: #28a745;
   color: white;
 }
 
 .key.present {
-  background-color: #c9b458;
+  background-color: #ffc107;
   color: white;
 }
 
 .key.absent {
-  background-color: #787c7e;
+  background-color: #6c757d;
   color: white;
-}
-
-.turn-indicator {
-  height: 8px;
-  margin-top: 5px;
-  border-radius: 8px;
-  background-color: transparent;
-}
-
-.team1.active .turn-indicator {
-  background-color: #ff3b3b;
-}
-
-.team2.active .turn-indicator {
-  background-color: #4da6ff;
-}
+  }
