@@ -1,28 +1,32 @@
-const keyboardLayout = [ 'جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ' ];
+const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
 
 let currentTeam = 1;
-let word1 = localStorage.getItem('word1') || '';
-let word2 = localStorage.getItem('word2') || '';
+let word1 = localStorage.getItem('word1');
+let word2 = localStorage.getItem('word2');
 let attempts = parseInt(localStorage.getItem('attempts')) || 6;
+
+// تحقق من صحة البيانات
+if (!word1 || !word2 || isNaN(attempts)) {
+  alert("يرجى إدخال الكلمات أولاً من الصفحة الرئيسية.");
+  window.location.href = "index.html";
+}
 
 let guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill(''));
 let guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
-let currentRow = [0, 0]; // [team1, team2]
+let currentRow = [0, 0];
 let currentCol = [0, 0];
+
 let keyboardColors = { 1: {}, 2: {} };
 
 function createBoard(containerId, wordLength, attempts) {
   const board = document.getElementById(containerId);
-  board.style.display = 'grid';
-  board.style.gridTemplateColumns = `repeat(${wordLength}, 45px)`;
-  board.style.gap = '5px';
-
+  board.style.gridTemplateColumns = `repeat(${wordLength}, 40px)`;
   for (let i = 0; i < attempts * wordLength; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.id = `${containerId}-cell-${i}`;
-    cell.style.width = '45px';
-    cell.style.height = '45px';
+    cell.style.width = '40px';
+    cell.style.height = '40px';
     cell.style.border = '1px solid #ccc';
     cell.style.display = 'flex';
     cell.style.alignItems = 'center';
@@ -37,7 +41,6 @@ function createBoard(containerId, wordLength, attempts) {
 function renderKeyboard() {
   const keyboardDiv = document.getElementById('keyboard');
   keyboardDiv.innerHTML = '';
-
   keyboardLayout.forEach(row => {
     const rowDiv = document.createElement('div');
     [...row].forEach(letter => {
@@ -45,14 +48,12 @@ function renderKeyboard() {
       key.textContent = letter;
       key.className = 'key';
       key.onclick = () => handleKey(letter);
-      key.id = `key-${letter}`;
       rowDiv.appendChild(key);
     });
     keyboardDiv.appendChild(rowDiv);
   });
 
   const controlsRow = document.createElement('div');
-
   const enterBtn = document.createElement('button');
   enterBtn.textContent = '⏎';
   enterBtn.className = 'key';
@@ -120,7 +121,6 @@ function submitGuess() {
   const colors = Array(word.length).fill('absent');
   const used = Array(word.length).fill(false);
 
-  // Correct letters
   for (let i = 0; i < word.length; i++) {
     if (guess[i] === word[i]) {
       colors[i] = 'correct';
@@ -129,7 +129,6 @@ function submitGuess() {
     }
   }
 
-  // Present letters
   for (let i = 0; i < word.length; i++) {
     if (colors[i] !== 'correct') {
       for (let j = 0; j < word.length; j++) {
@@ -145,22 +144,15 @@ function submitGuess() {
     }
   }
 
-  // Apply to board
   for (let i = 0; i < word.length; i++) {
     const cellId = `board${currentTeam}-cell-${row * word.length + i}`;
     const cell = document.getElementById(cellId);
-    cell.style.backgroundColor =
-      colors[i] === 'correct'
-        ? '#6aaa64'
-        : colors[i] === 'present'
-        ? '#c9b458'
-        : '#787c7e';
+    cell.style.backgroundColor = colors[i] === 'correct' ? '#6aaa64' : colors[i] === 'present' ? '#c9b458' : '#787c7e';
     cell.style.color = 'white';
   }
 
   updateKeyboardColors();
 
-  // Win check
   if (guess === word) {
     alert(`فريق ${currentTeam} فاز! ✅`);
     return;
@@ -180,31 +172,22 @@ function submitGuess() {
 
 function toggleTurn() {
   currentTeam = currentTeam === 1 ? 2 : 1;
-  document.getElementById('current-turn').textContent =
-    `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
+  document.getElementById('current-turn').textContent = `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
   document.querySelector('.team1').classList.toggle('active', currentTeam === 1);
   document.querySelector('.team2').classList.toggle('active', currentTeam === 2);
   updateKeyboardColors();
 }
 
 function handleKeyboardEvents(e) {
-  if (e.key === 'Enter') {
-    submitGuess();
-  } else if (e.key === 'Backspace') {
-    deleteLetter();
-  } else if (/^[؀-ۿ]$/.test(e.key)) {
-    handleKey(e.key);
-  }
+  if (e.key === 'Enter') submitGuess();
+  else if (e.key === 'Backspace') deleteLetter();
+  else if (/^[؀-ۿ]$/.test(e.key)) handleKey(e.key);
 }
 
 window.onload = () => {
-  if (!word1 || !word2) {
-    alert("لم يتم إدخال الكلمات بعد.");
-    return;
-  }
-
   createBoard('board1', word1.length, attempts);
   createBoard('board2', word2.length, attempts);
   renderKeyboard();
   document.addEventListener('keydown', handleKeyboardEvents);
+  toggleTurn();
 };
