@@ -1,78 +1,23 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>إدخال الكلمات - تحدي الكلمة</title>
+  <meta charset="UTF-8">
+  <title>ابدأ التحدي</title>
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(to right, #1d3557, #e63946);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: white;
-    }
-
-    .container {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-      font-size: 2em;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 1.1em;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      font-size: 1.1em;
-      margin-bottom: 20px;
-      border: none;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    button {
-      padding: 12px 20px;
-      font-size: 1.1em;
-      background-color: #f1faee;
-      color: #1d3557;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #a8dadc;
-    }
-  </style>
 </head>
-<body>
+<body class="start-page">
   <div class="container">
-    <h1>تحدي الكلمة ⚔️</h1>
-    <label for="word1">أدخل كلمة فريق 1 🔴:</label>
-    <input type="text" id="word1" maxlength="10" autocomplete="off" />
+    <h1>⚔️ تحدي الكلمة</h1>
 
-    <label for="word2">أدخل كلمة فريق 2 🔵:</label>
-    <input type="text" id="word2" maxlength="10" autocomplete="off" />
+    <label>كلمة فريق 1:</label>
+    <input type="text" id="word1" maxlength="10">
+
+    <label>كلمة فريق 2:</label>
+    <input type="text" id="word2" maxlength="10">
+
+    <label>عدد المحاولات:</label>
+    <input type="number" id="attempts" min="1" max="10" value="6">
 
     <button onclick="startGame()">ابدأ اللعبة</button>
   </div>
@@ -81,17 +26,19 @@
     function startGame() {
       const word1 = document.getElementById('word1').value.trim();
       const word2 = document.getElementById('word2').value.trim();
+      const attempts = parseInt(document.getElementById('attempts').value);
 
-      if (word1.length < 3 || word2.length < 3) {
-        alert('الكلمات يجب أن تكون من 3 أحرف أو أكثر!');
+      if (!word1 || !word2 || word1.length !== word2.length) {
+        alert('يجب إدخال كلمتين بنفس الطول');
         return;
       }
 
       localStorage.setItem('word1', word1);
       localStorage.setItem('word2', word2);
-      localStorage.setItem('attempts', 6);
+      localStorage.setItem('attempts', attempts);
+
       window.location.href = "game.html";
     }
   </script>
 </body>
-</html>
+                                               </html>
