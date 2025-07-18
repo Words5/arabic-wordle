@@ -14,32 +14,6 @@ body {
   font-size: 1.5em;
 }
 
-.setup-page {
-  background: linear-gradient(to left, #f9c74f, #f9844a);
-}
-
-.setup-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 50px auto;
-  width: 300px;
-}
-
-.setup-container input,
-.setup-container button {
-  padding: 10px;
-  font-size: 18px;
-  border-radius: 6px;
-  border: none;
-}
-
-.setup-container button {
-  background-color: #264653;
-  color: white;
-  cursor: pointer;
-}
-
 .game-area {
   display: flex;
   justify-content: space-around;
@@ -108,4 +82,16 @@ body {
 .key.absent {
   background-color: #787c7e;
   color: white;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background-color: white;
+  color: black;
   }
