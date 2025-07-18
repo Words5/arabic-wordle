@@ -1,147 +1,153 @@
 body {
   margin: 0;
   font-family: 'Cairo', sans-serif;
-  background: linear-gradient(-45deg, #1d3557, #e63946, #1d3557, #e63946);
-  background-size: 400% 400%;
-  animation: smokeFlow 15s ease infinite;
+  background: linear-gradient(to right, #1d3557, #e63946);
   color: white;
-  text-align: center;
   min-height: 100vh;
-  font-size: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-@keyframes smokeFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+h1, h2 {
+  margin: 10px 0;
 }
 
-.inputs {
-  margin: 30px;
-  font-size: 22px;
+#start-screen,
+#game-screen {
+  padding: 40px 20px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-input {
+#start-screen {
+  display: flex;
+}
+
+input[type="text"],
+input[type="number"] {
   padding: 12px;
   margin: 10px;
-  font-size: 20px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
-  width: 200px;
+  width: 250px;
+  font-size: 16px;
 }
 
 button {
-  padding: 12px 25px;
-  font-size: 20px;
-  background-color: white;
-  color: black;
+  padding: 14px 28px;
+  margin: 15px;
+  font-size: 18px;
+  background-color: #ffffff;
+  color: #1d3557;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  margin-top: 15px;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-.game-area {
-  display: flex;
-  justify-content: space-around;
-  padding: 30px;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.team {
-  flex: 1;
-  max-width: 600px;
+button:hover {
+  background-color: #f1faee;
 }
 
 .board {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   justify-content: center;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .cell {
-  width: 55px;
-  height: 55px;
+  width: 60px;
+  height: 60px;
   border: 2px solid #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 26px;
+  font-weight: bold;
   background-color: white;
   color: black;
-  font-weight: bold;
+  border-radius: 4px;
 }
 
-.keyboard-container {
+#keyboard {
   margin-top: 40px;
-  padding: 20px;
-  background-color: rgba(0,0,0,0.1);
-  border-top: 1px solid #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .key {
-  margin: 6px;
-  padding: 14px 18px;
+  margin: 5px;
+  padding: 18px 22px;
+  font-size: 22px;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
-  font-size: 24px;
   cursor: pointer;
-  background-color: white;
-  color: black;
-  font-weight: bold;
-  min-width: 50px;
+  background-color: #eeeeee;
+  color: #333;
+  transition: 0.2s;
+}
+
+.key:hover {
+  background-color: #ddd;
 }
 
 .key.correct {
-  background-color: #6aaa64;
+  background-color: #6aaa64 !important;
   color: white;
 }
 
 .key.present {
-  background-color: #c9b458;
+  background-color: #c9b458 !important;
   color: white;
 }
 
 .key.absent {
-  background-color: #787c7e;
+  background-color: #787c7e !important;
   color: white;
 }
 
-.team1.active .turn-indicator {
-  background-color: #ff3b3b;
-  opacity: 1;
-  box-shadow: 0 0 10px 3px #ff3b3b;
-}
-
-.team2.active .turn-indicator {
-  background-color: #4da6ff;
-  opacity: 1;
-  box-shadow: 0 0 10px 3px #4da6ff;
+.team {
+  margin: 20px;
+  text-align: center;
 }
 
 .turn-indicator {
-  height: 22px;
-  border-radius: 10px;
-  margin-top: 12px;
-  opacity: 0.4;
+  margin-top: 10px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #ffffff33;
 }
 
-h1, h2 {
-  font-size: 32px;
+.team1.active .turn-indicator {
+  background-color: #e63946;
+  box-shadow: 0 0 10px #e63946;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 30px;
-  align-items: center;
-  margin-top: 20px;
-    }
+.team2.active .turn-indicator {
+  background-color: #1d3557;
+  box-shadow: 0 0 10px #1d3557;
+}
+
+#current-turn {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .cell {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .key {
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+  }
