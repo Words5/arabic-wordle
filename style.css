@@ -1,157 +1,71 @@
-/* خلفية متناسقة */
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #111, #000);
-  color: white;
-  font-family: Tahoma, sans-serif;
+body {
+  font-family: 'Cairo', sans-serif;
   text-align: center;
-  overflow-x: hidden;
-}
-
-/* حاوية وسطية */
-.container {
-  max-width: 100%;
+  direction: rtl;
+  background-color: #f8f9fa;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-/* مربعات اللعبة */
-#board {
-  display: grid;
-  gap: 10px;
-  justify-content: center;
+.config {
   margin-bottom: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-  max-width: 100%;
 }
 
-/* خلية حرف */
+input {
+  margin: 5px;
+  padding: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.board-container {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(6, 50px);
+  gap: 5px;
+  justify-content: center;
+}
+
 .cell {
   width: 50px;
   height: 50px;
-  border: 2px solid #555;
-  font-size: 28px;
+  border: 2px solid #ccc;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
   font-weight: bold;
-  text-align: center;
-  line-height: 50px;
-  background-color: #111;
-  border-radius: 8px;
 }
 
-/* ألوان النتائج */
 .correct {
   background-color: green;
+  color: white;
 }
-.wrong-place {
+
+.present {
   background-color: orange;
-}
-.wrong {
-  background-color: #444;
-}
-.repeat {
-  background-color: #007bff;
+  color: white;
 }
 
-/* كيبورد */
-#keyboard {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.key {
-  display: inline-block;
-  margin: 4px;
-  padding: 12px 14px;
-  background-color: #333;
-  border-radius: 6px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 18px;
-  min-width: 40px;
-}
-.key.correct {
-  background-color: green;
-}
-.key.wrong-place {
-  background-color: orange;
-}
-.key.wrong {
-  background-color: #444;
-}
-.key.repeat {
-  background-color: #007bff;
-}
-
-/* نتيجة الفوز */
-#resultMessage {
-  font-size: 24px;
-  margin-top: 20px;
-}
-#resultMessage strong {
-  color: #00ffff;
-  font-size: 32px;
-}
-
-/* تصميم الصفحة الأولى */
-.landing-bg {
-  background: linear-gradient(135deg, #111, #000);
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* كلمة WORDS في الخلف */
-.overlay-text {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 100px;
-  color: rgba(255, 255, 255, 0.05);
-  font-weight: bold;
-  z-index: 0;
-  user-select: none;
-  pointer-events: none;
-  text-shadow: 4px 4px 10px rgba(255, 255, 255, 0.05);
-}
-
-/* إدخال الكلمة السرية */
-.special-input {
-  z-index: 1;
-  position: relative;
-  margin-top: 80px;
-}
-
-.special-input input {
-  font-size: 30px;
-  padding: 16px;
-  width: 80%;
-  border-radius: 12px;
-  border: 2px solid #0ff;
-  background-color: #000;
-  color: #0ff;
-  text-align: center;
-  box-shadow: 0 0 12px #0ff;
-  margin-bottom: 16px;
-}
-
-.special-input button {
-  padding: 12px 24px;
-  font-size: 20px;
-  border: none;
-  border-radius: 10px;
-  background-color: #0ff;
-  color: #000;
-  cursor: pointer;
-  box-shadow: 0 0 10px #0ff;
+.absent {
+  background-color: #ccc;
+  color: black;
 }
