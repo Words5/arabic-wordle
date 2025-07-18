@@ -1,24 +1,22 @@
-const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
-let currentTeam = 1;
-
 let word1 = '';
 let word2 = '';
 let attempts = 6;
-
-let guesses1 = [];
-let guesses2 = [];
+let currentTeam = 1;
 let currentRow = [0, 0];
 let currentCol = [0, 0];
-
+let guesses1 = [];
+let guesses2 = [];
 let keyboardColors = { 1: {}, 2: {} };
+
+const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
 
 function startGame() {
   word1 = document.getElementById('word1').value.trim();
   word2 = document.getElementById('word2').value.trim();
   attempts = parseInt(document.getElementById('attempts').value) || 6;
 
-  if (!word1 || !word2 || isNaN(attempts)) {
-    alert("رجاءً أدخل الكلمات وعدد المحاولات بشكل صحيح.");
+  if (!word1 || !word2 || word1.length !== word2.length) {
+    alert('تأكد من كتابة كلمتين متساويتين في الطول');
     return;
   }
 
@@ -33,30 +31,17 @@ function startGame() {
   createBoard('board1', word1.length, attempts);
   createBoard('board2', word2.length, attempts);
   renderKeyboard();
-  updateTurnDisplay();
-  document.addEventListener('keydown', handleKeyboardEvents);
+  updateTurnUI();
 }
 
 function createBoard(containerId, wordLength, attempts) {
   const board = document.getElementById(containerId);
   board.innerHTML = '';
-  board.style.display = 'grid';
   board.style.gridTemplateColumns = `repeat(${wordLength}, 50px)`;
-  board.style.gap = '6px';
-
   for (let i = 0; i < attempts * wordLength; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.id = `${containerId}-cell-${i}`;
-    cell.style.width = '50px';
-    cell.style.height = '50px';
-    cell.style.border = '1px solid #ccc';
-    cell.style.display = 'flex';
-    cell.style.alignItems = 'center';
-    cell.style.justifyContent = 'center';
-    cell.style.fontSize = '22px';
-    cell.style.backgroundColor = 'white';
-    cell.style.color = 'black';
     board.appendChild(cell);
   }
 }
@@ -64,7 +49,6 @@ function createBoard(containerId, wordLength, attempts) {
 function renderKeyboard() {
   const keyboardDiv = document.getElementById('keyboard');
   keyboardDiv.innerHTML = '';
-
   keyboardLayout.forEach(row => {
     const rowDiv = document.createElement('div');
     [...row].forEach(letter => {
@@ -72,26 +56,25 @@ function renderKeyboard() {
       key.textContent = letter;
       key.className = 'key';
       key.onclick = () => handleKey(letter);
-      key.id = `key-${letter}`;
       rowDiv.appendChild(key);
     });
     keyboardDiv.appendChild(rowDiv);
   });
 
-  const controlsRow = document.createElement('div');
-  const enterBtn = document.createElement('button');
-  enterBtn.textContent = '⏎';
-  enterBtn.className = 'key';
-  enterBtn.onclick = () => submitGuess();
+  const controlRow = document.createElement('div');
+  const enter = document.createElement('button');
+  enter.textContent = '⏎';
+  enter.className = 'key';
+  enter.onclick = () => submitGuess();
 
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = '⌫';
-  deleteBtn.className = 'key';
-  deleteBtn.onclick = () => deleteLetter();
+  const del = document.createElement('button');
+  del.textContent = '⌫';
+  del.className = 'key';
+  del.onclick = () => deleteLetter();
 
-  controlsRow.appendChild(enterBtn);
-  controlsRow.appendChild(deleteBtn);
-  keyboardDiv.appendChild(controlsRow);
+  controlRow.appendChild(enter);
+  controlRow.appendChild(del);
+  keyboardDiv.appendChild(controlRow);
 
   updateKeyboardColors();
 }
@@ -166,32 +149,38 @@ function submitGuess() {
   for (let i = 0; i < word.length; i++) {
     const cellId = `board${currentTeam}-cell-${row * word.length + i}`;
     const cell = document.getElementById(cellId);
-    cell.style.backgroundColor =
-      colors[i] === 'correct'
-        ? '#6aaa64'
-        : colors[i] === 'present'
-        ? '#c9b458'
-        : '#787c7e';
-    cell.style.color = 'white';
+    cell.className = `cell ${colors[i]}`;
   }
 
   updateKeyboardColors();
 
   if (guess === word) {
-    setTimeout(() => alert(`فريق ${currentTeam} فاز! ✅`), 100);
+    showPopup(`🎉 فريق ${currentTeam} فاز!`);
     return;
   }
 
   currentRow[teamIndex]++;
   currentCol[teamIndex] = 0;
 
-  if (currentRow[teamIndex] >= attempts) {
-    if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
-      alert('انتهت المحاولات! تعادل. 🤝');
-    }
+  if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
+    showPopup('😢 انتهت المحاولات! تعادل 🤝');
+    return;
   }
 
   toggleTurn();
+}
+
+function toggleTurn() {
+  currentTeam = currentTeam === 1 ? 2 : 1;
+  updateTurnUI();
+  updateKeyboardColors();
+}
+
+function updateTurnUI() {
+  document.getElementById('current-turn').textContent =
+    `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
+  document.querySelector('.team1').classList.toggle('active', currentTeam === 1);
+  document.querySelector('.team2').classList.toggle('active', currentTeam === 2);
 }
 
 function updateKeyboardColors() {
@@ -199,31 +188,20 @@ function updateKeyboardColors() {
   document.querySelectorAll('.key').forEach(key => {
     const letter = key.textContent;
     key.className = 'key';
-    if (colorMap[letter]) {
-      key.classList.add(colorMap[letter]);
-    }
+    if (colorMap[letter]) key.classList.add(colorMap[letter]);
   });
 }
 
-function toggleTurn() {
-  currentTeam = currentTeam === 1 ? 2 : 1;
-  updateTurnDisplay();
-  updateKeyboardColors();
+function showPopup(message) {
+  document.getElementById('popup-content').innerHTML = `
+    <p>${message}</p>
+    <button onclick="location.reload()">🔄 لعب من جديد</button>
+  `;
+  document.getElementById('popup').style.display = 'flex';
 }
 
-function updateTurnDisplay() {
-  document.getElementById('current-turn').textContent =
-    `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
-  document.querySelector('.team1').classList.toggle('active', currentTeam === 1);
-  document.querySelector('.team2').classList.toggle('active', currentTeam === 2);
-}
-
-function handleKeyboardEvents(e) {
-  if (e.key === 'Enter') {
-    submitGuess();
-  } else if (e.key === 'Backspace') {
-    deleteLetter();
-  } else if (/^[؀-ۿ]$/.test(e.key)) {
-    handleKey(e.key);
-  }
-}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitGuess();
+  else if (e.key === 'Backspace') deleteLetter();
+  else if (/^[؀-ۿ]$/.test(e.key)) handleKey(e.key);
+});
