@@ -1,44 +1,55 @@
-// Arabic letters used in the keyboard
-const arabicKeys = [
-  'ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش',
-  'ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'
+// كيبورد عربي مرتب حسب كيبورد الجوال
+const arabicKeyRows = [
+  ['ج','ح','خ','هـ','ع','غ','ف','ق','ث','ص','ض'],
+  ['ط','ك','م','ن','ت','ا','ل','ب','ي','س','ش'],
+  ['د','ظ','ز','و','ة','ى','ر','ئ','ؤ','ء','ذ']
 ];
 
-// Game state
-let turn = 1; // 1 = team1, 2 = team2
+let turn = 1;
 const keyColorsTeam1 = {};
 const keyColorsTeam2 = {};
 
 function handleKeyPress(char) {
-  // Add character to current row or input (to be implemented)
-  console.log(`Key pressed: ${char}`);
+  console.log(`ضغط: ${char}`);
+  // هنا يتم التعامل مع إدخال الحرف داخل المربعات
 }
 
 function colorKey(letter, status) {
   const teamColors = turn === 1 ? keyColorsTeam1 : keyColorsTeam2;
   const priority = { correct: 3, present: 2, absent: 1 };
+
   if (!teamColors[letter] || priority[status] > priority[teamColors[letter]]) {
     teamColors[letter] = status;
   }
+
   renderKeyboard();
 }
 
 function renderKeyboard() {
   const container = document.getElementById("keyboard");
   container.innerHTML = "";
+
   const teamColors = turn === 1 ? keyColorsTeam1 : keyColorsTeam2;
 
-  arabicKeys.forEach(char => {
-    const btn = document.createElement("button");
-    btn.textContent = char;
-    btn.className = "key";
+  arabicKeyRows.forEach(row => {
+    const rowDiv = document.createElement("div");
+    rowDiv.style.display = "flex";
+    rowDiv.style.justifyContent = "center";
 
-    if (teamColors[char]) {
-      btn.classList.add(teamColors[char]);
-    }
+    [...row].reverse().forEach(char => {
+      const btn = document.createElement("button");
+      btn.textContent = char;
+      btn.className = "key";
 
-    btn.onclick = () => handleKeyPress(char);
-    container.appendChild(btn);
+      if (teamColors[char]) {
+        btn.classList.add(teamColors[char]);
+      }
+
+      btn.onclick = () => handleKeyPress(char);
+      rowDiv.appendChild(btn);
+    });
+
+    container.appendChild(rowDiv);
   });
 }
 
@@ -50,11 +61,6 @@ function updateTurnDisplay() {
   document.querySelector(".team2").classList.toggle("active", turn === 2);
 
   renderKeyboard();
-  updateCurrentRowDisplay();
-}
-
-function updateCurrentRowDisplay() {
-  // to be implemented depending on how rows are shown
 }
 
 renderKeyboard();
