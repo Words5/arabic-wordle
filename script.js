@@ -1,168 +1,112 @@
-let targetWord = "";
-let currentTry = 0;
-let maxTries = 6;
-let currentFilledIndex = 0;
+let word1 = "", word2 = "", attempts = 6;
+let turn = 1;
+let currentRow1 = 0, currentRow2 = 0;
+let maxLength = 6;
+let board1 = [], board2 = [];
 
 function startGame() {
-  const input = document.getElementById("secretWord");
-  targetWord = input.value.trim();
-  if (targetWord === "" || /[^ء-ي]/.test(targetWord)) return;
+  word1 = document.getElementById("word1").value.trim();
+  word2 = document.getElementById("word2").value.trim();
+  attempts = parseInt(document.getElementById("attempts").value);
 
-  document.querySelector(".special-input").style.display = "none";
-  document.getElementById("game").style.display = "block";
-  createBoard();
-  createKeyboard();
-}
-
-function createBoard() {
-  const board = document.getElementById("board");
-  board.innerHTML = "";
-  board.style.gridTemplateColumns = `repeat(${targetWord.length}, 1fr)`;
-  for (let i = 0; i < targetWord.length * maxTries; i++) {
-    const cell = document.createElement("div");
-    cell.className = "cell";
-    cell.dataset.letter = "";
-    board.appendChild(cell);
+  if (![5,6].includes(word1.length) || ![5,6].includes(word2.length)) {
+    alert("الكلمات يجب أن تكون من 5 إلى 6 حروف");
+    return;
   }
-  currentFilledIndex = 0;
+
+  maxLength = Math.max(word1.length, word2.length);
+  document.querySelector(".config").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+  generateBoards();
+  updateTurnDisplay();
 }
 
-function createKeyboard() {
-  const keyboard = document.getElementById("keyboard");
-  keyboard.innerHTML = "";
+function generateBoards() {
+  const board1El = document.getElementById("board1");
+  const board2El = document.getElementById("board2");
 
-  const rows = [
-    "جحخهعغفقثصض",
-    "طكمنتالبيسش",
-    "دظزوةىرئؤءذ"
-  ];
+  board1El.style.gridTemplateColumns = `repeat(${word1.length}, 50px)`;
+  board2El.style.gridTemplateColumns = `repeat(${word2.length}, 50px)`;
 
-  rows.forEach(row => {
-    const rowDiv = document.createElement("div");
-    rowDiv.style.display = "flex";
-    rowDiv.style.justifyContent = "center";
-    for (let letter of row) {
-      const key = document.createElement("div");
-      key.className = "key";
-      key.textContent = letter;
-      key.onclick = () => handleKeyPress(letter);
-      rowDiv.appendChild(key);
+  for (let i = 0; i < attempts; i++) {
+    let row1 = [], row2 = [];
+    for (let j = 0; j < word1.length; j++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      board1El.appendChild(cell);
+      row1.push(cell);
     }
-    keyboard.appendChild(rowDiv);
-  });
-
-  const controlRow = document.createElement("div");
-  controlRow.style.display = "flex";
-  controlRow.style.justifyContent = "center";
-
-  const backspaceKey = document.createElement("div");
-  backspaceKey.className = "key";
-  backspaceKey.textContent = "⌫";
-  backspaceKey.onclick = () => handleBackspace();
-  controlRow.appendChild(backspaceKey);
-
-  const enterKey = document.createElement("div");
-  enterKey.className = "key";
-  enterKey.textContent = "⏎";
-  enterKey.onclick = () => checkGuess();
-  controlRow.appendChild(enterKey);
-
-  keyboard.appendChild(controlRow);
-}
-
-function handleKeyPress(letter) {
-  if (currentTry >= maxTries) return;
-  const limit = (currentTry + 1) * targetWord.length;
-  if (currentFilledIndex >= limit) return;
-
-  const cellIndex = currentTry * targetWord.length + (currentFilledIndex % targetWord.length);
-  const cell = document.getElementsByClassName("cell")[cellIndex];
-  cell.textContent = letter;
-  cell.dataset.letter = letter;
-  currentFilledIndex++;
-}
-
-function handleBackspace() {
-  if (currentFilledIndex <= currentTry * targetWord.length) return;
-  currentFilledIndex--;
-  const cellIndex = currentTry * targetWord.length + (currentFilledIndex % targetWord.length);
-  const cell = document.getElementsByClassName("cell")[cellIndex];
-  cell.textContent = "";
-  cell.dataset.letter = "";
-}
-
-function getGuessFromBoard() {
-  let guess = "";
-  for (let i = 0; i < targetWord.length; i++) {
-    const cell = document.getElementsByClassName("cell")[currentTry * targetWord.length + i];
-    guess += cell.dataset.letter || "";
+    for (let j = 0; j < word2.length; j++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      board2El.appendChild(cell);
+      row2.push(cell);
+    }
+    board1.push(row1);
+    board2.push(row2);
   }
-  return guess;
 }
 
-function checkGuess() {
-  const guess = getGuessFromBoard();
-  if (guess.length !== targetWord.length) return;
+function updateTurnDisplay() {
+  document.getElementById("current-turn").textContent =
+    "دور: " + (turn === 1 ? "فريق 1 🔴" : "🔵 فريق 2");
+}
 
-  const startIdx = currentTry * targetWord.length;
-  const tempTarget = targetWord.split("");
-  const guessLetters = guess.split("");
-  const colors = Array(guess.length).fill("");
+function submitGuess() {
+  const input = document.getElementById("guessInput");
+  const guess = input.value.trim();
 
-  // صح في المكان
-  for (let i = 0; i < guess.length; i++) {
-    if (guess[i] === tempTarget[i]) {
-      colors[i] = "correct";
-      tempTarget[i] = null;
+  if (turn === 1 && guess.length !== word1.length) {
+    alert(`كلمة فريق 1 يجب أن تكون ${word1.length} حروف`);
+    return;
+  }
+  if (turn === 2 && guess.length !== word2.length) {
+    alert(`كلمة فريق 2 يجب أن تكون ${word2.length} حروف`);
+    return;
+  }
+
+  const word = turn === 1 ? word1 : word2;
+  const board = turn === 1 ? board1 : board2;
+  const row = turn === 1 ? currentRow1 : currentRow2;
+
+  if (row >= attempts) {
+    alert("انتهت المحاولات");
+    return;
+  }
+
+  for (let i = 0; i < word.length; i++) {
+    board[row][i].textContent = guess[i];
+    if (guess[i] === word[i]) {
+      board[row][i].classList.add("correct");
+    } else if (word.includes(guess[i])) {
+      board[row][i].classList.add("present");
+    } else {
+      board[row][i].classList.add("absent");
     }
   }
 
-  // موجود لكن بمكان خطأ
-  for (let i = 0; i < guess.length; i++) {
-    if (colors[i] === "") {
-      const index = tempTarget.indexOf(guess[i]);
-      if (index !== -1) {
-        colors[i] = "repeat";
-        tempTarget[index] = null;
-      } else {
-        colors[i] = "wrong";
-      }
-    }
+  if (guess === word) {
+    document.getElementById("result").textContent =
+      `🎉 فاز فريق ${turn === 1 ? "1 🔴" : "🔵 2"}!`;
+    disableInput();
+    return;
   }
 
-  // تلوين الخانات
-  for (let i = 0; i < guess.length; i++) {
-    const cell = document.getElementsByClassName("cell")[startIdx + i];
-    cell.classList.add(colors[i]);
-    updateKeyColor(guess[i], colors[i]);
+  if (turn === 1) currentRow1++;
+  else currentRow2++;
+
+  if (currentRow1 >= attempts && currentRow2 >= attempts) {
+    document.getElementById("result").textContent = "❌ انتهت المحاولات، لم يفز أحد.";
+    disableInput();
+    return;
   }
 
-  currentTry++;
-
-  if (guess === targetWord) {
-    setTimeout(() => showResult(true), 300);
-  } else if (currentTry >= maxTries) {
-    setTimeout(() => showResult(false), 300);
-  }
+  turn = turn === 1 ? 2 : 1;
+  updateTurnDisplay();
+  input.value = "";
+  input.focus();
 }
 
-function updateKeyColor(letter, status) {
-  const keys = document.getElementsByClassName("key");
-  for (let key of keys) {
-    if (key.textContent === letter) {
-      key.classList.remove("correct", "wrong-place", "wrong", "repeat");
-      key.classList.add(status);
-    }
-  }
-}
-
-function showResult(won) {
-  const resultBox = document.getElementById("resultMessage");
-  if (won) {
-    resultBox.innerHTML = `🎉 لقد فزت! <br> الكلمة هي: <strong>${targetWord}</strong>`;
-  } else {
-    resultBox.innerHTML = `❌ انتهت المحاولات. الكلمة كانت: <strong>${targetWord}</strong>`;
-  }
-  resultBox.style.display = "block";
-  document.getElementById("restartBtn").style.display = "inline-block";
+function disableInput() {
+  document.getElementById("guessInput").disabled = true;
 }
