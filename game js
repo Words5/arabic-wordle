@@ -196,6 +196,11 @@ function handleKeyboardEvents(e) {
   }
 }
 
+function restartGame() {
+  localStorage.clear();
+  window.location.href = 'index.html';
+}
+
 window.onload = () => {
   createBoard('board1', word1.length, attempts);
   createBoard('board2', word2.length, attempts);
