@@ -1,59 +1,210 @@
-// script.js
-
 const keyboardLayout = [ 'جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ' ];
 
-let currentTeam = 1; let word1 = localStorage.getItem('word1'); let word2 = localStorage.getItem('word2'); let attempts = parseInt(localStorage.getItem('attempts')) || 6;
+let currentTeam = 1;
+let word1 = localStorage.getItem('word1') || '';
+let word2 = localStorage.getItem('word2') || '';
+let attempts = parseInt(localStorage.getItem('attempts')) || 6;
 
-let guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill('')); let guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill('')); let currentRow = [0, 0]; // team1, team2 let currentCol = [0, 0];
-
+let guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill(''));
+let guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
+let currentRow = [0, 0]; // [team1, team2]
+let currentCol = [0, 0];
 let keyboardColors = { 1: {}, 2: {} };
 
-function createBoard(containerId, wordLength, attempts) { const board = document.getElementById(containerId); board.style.display = 'grid'; board.style.gridTemplateColumns = repeat(${wordLength}, 40px); board.style.gap = '5px'; for (let i = 0; i < attempts * wordLength; i++) { const cell = document.createElement('div'); cell.className = 'cell'; cell.id = ${containerId}-cell-${i}; cell.style.width = '40px'; cell.style.height = '40px'; cell.style.border = '1px solid #ccc'; cell.style.display = 'flex'; cell.style.alignItems = 'center'; cell.style.justifyContent = 'center'; cell.style.fontSize = '20px'; cell.style.backgroundColor = 'white'; cell.style.color = 'black'; board.appendChild(cell); } }
+function createBoard(containerId, wordLength, attempts) {
+  const board = document.getElementById(containerId);
+  board.style.display = 'grid';
+  board.style.gridTemplateColumns = `repeat(${wordLength}, 45px)`;
+  board.style.gap = '5px';
 
-function renderKeyboard() { const keyboardDiv = document.getElementById('keyboard'); keyboardDiv.innerHTML = ''; keyboardLayout.forEach(row => { const rowDiv = document.createElement('div'); [...row].forEach(letter => { const key = document.createElement('button'); key.textContent = letter; key.className = 'key'; key.onclick = () => handleKey(letter); key.id = key-${letter}; rowDiv.appendChild(key); }); keyboardDiv.appendChild(rowDiv); });
+  for (let i = 0; i < attempts * wordLength; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.id = `${containerId}-cell-${i}`;
+    cell.style.width = '45px';
+    cell.style.height = '45px';
+    cell.style.border = '1px solid #ccc';
+    cell.style.display = 'flex';
+    cell.style.alignItems = 'center';
+    cell.style.justifyContent = 'center';
+    cell.style.fontSize = '20px';
+    cell.style.backgroundColor = 'white';
+    cell.style.color = 'black';
+    board.appendChild(cell);
+  }
+}
 
-const controlsRow = document.createElement('div'); const enterBtn = document.createElement('button'); enterBtn.textContent = '⏎'; enterBtn.className = 'key'; enterBtn.onclick = () => submitGuess();
+function renderKeyboard() {
+  const keyboardDiv = document.getElementById('keyboard');
+  keyboardDiv.innerHTML = '';
 
-const deleteBtn = document.createElement('button'); deleteBtn.textContent = '⌫'; deleteBtn.className = 'key'; deleteBtn.onclick = () => deleteLetter();
+  keyboardLayout.forEach(row => {
+    const rowDiv = document.createElement('div');
+    [...row].forEach(letter => {
+      const key = document.createElement('button');
+      key.textContent = letter;
+      key.className = 'key';
+      key.onclick = () => handleKey(letter);
+      key.id = `key-${letter}`;
+      rowDiv.appendChild(key);
+    });
+    keyboardDiv.appendChild(rowDiv);
+  });
 
-controlsRow.appendChild(enterBtn); controlsRow.appendChild(deleteBtn); keyboardDiv.appendChild(controlsRow);
+  const controlsRow = document.createElement('div');
 
-updateKeyboardColors(); }
+  const enterBtn = document.createElement('button');
+  enterBtn.textContent = '⏎';
+  enterBtn.className = 'key';
+  enterBtn.onclick = () => submitGuess();
 
-function updateKeyboardColors() { const colorMap = keyboardColors[currentTeam]; document.querySelectorAll('.key').forEach(key => { const letter = key.textContent; key.className = 'key'; if (colorMap[letter]) { key.classList.add(colorMap[letter]); } }); }
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = '⌫';
+  deleteBtn.className = 'key';
+  deleteBtn.onclick = () => deleteLetter();
 
-function handleKey(letter) { let row = currentRow[currentTeam - 1]; let col = currentCol[currentTeam - 1]; const word = currentTeam === 1 ? word1 : word2; const guesses = currentTeam === 1 ? guesses1 : guesses2;
+  controlsRow.appendChild(enterBtn);
+  controlsRow.appendChild(deleteBtn);
+  keyboardDiv.appendChild(controlsRow);
 
-if (col < word.length && row < attempts) { guesses[row][col] = letter; const cellId = board${currentTeam}-cell-${row * word.length + col}; document.getElementById(cellId).textContent = letter; currentCol[currentTeam - 1]++; } }
+  updateKeyboardColors();
+}
 
-function deleteLetter() { let row = currentRow[currentTeam - 1]; let col = currentCol[currentTeam - 1]; const word = currentTeam === 1 ? word1 : word2; const guesses = currentTeam === 1 ? guesses1 : guesses2;
+function updateKeyboardColors() {
+  const colorMap = keyboardColors[currentTeam];
+  document.querySelectorAll('.key').forEach(key => {
+    const letter = key.textContent;
+    key.className = 'key';
+    if (colorMap[letter]) {
+      key.classList.add(colorMap[letter]);
+    }
+  });
+}
 
-if (col > 0) { currentCol[currentTeam - 1]--; guesses[row][currentCol[currentTeam - 1]] = ''; const cellId = board${currentTeam}-cell-${row * word.length + currentCol[currentTeam - 1]}; document.getElementById(cellId).textContent = ''; } }
+function handleKey(letter) {
+  let row = currentRow[currentTeam - 1];
+  let col = currentCol[currentTeam - 1];
+  const word = currentTeam === 1 ? word1 : word2;
+  const guesses = currentTeam === 1 ? guesses1 : guesses2;
 
-function submitGuess() { const row = currentRow[currentTeam - 1]; const word = currentTeam === 1 ? word1 : word2; const guesses = currentTeam === 1 ? guesses1 : guesses2; const guess = guesses[row].join('');
+  if (col < word.length && row < attempts) {
+    guesses[row][col] = letter;
+    const cellId = `board${currentTeam}-cell-${row * word.length + col}`;
+    document.getElementById(cellId).textContent = letter;
+    currentCol[currentTeam - 1]++;
+  }
+}
 
-if (guess.length !== word.length) return;
+function deleteLetter() {
+  let row = currentRow[currentTeam - 1];
+  let col = currentCol[currentTeam - 1];
+  const word = currentTeam === 1 ? word1 : word2;
+  const guesses = currentTeam === 1 ? guesses1 : guesses2;
 
-const colors = Array(word.length).fill('absent'); const used = Array(word.length).fill(false);
+  if (col > 0) {
+    currentCol[currentTeam - 1]--;
+    guesses[row][currentCol[currentTeam - 1]] = '';
+    const cellId = `board${currentTeam}-cell-${row * word.length + currentCol[currentTeam - 1]}`;
+    document.getElementById(cellId).textContent = '';
+  }
+}
 
-// First pass for correct for (let i = 0; i < word.length; i++) { if (guess[i] === word[i]) { colors[i] = 'correct'; used[i] = true; keyboardColors[currentTeam][guess[i]] = 'correct'; } } // Second pass for present for (let i = 0; i < word.length; i++) { if (colors[i] !== 'correct') { for (let j = 0; j < word.length; j++) { if (!used[j] && guess[i] === word[j]) { colors[i] = 'present'; used[j] = true; if (keyboardColors[currentTeam][guess[i]] !== 'correct') { keyboardColors[currentTeam][guess[i]] = 'present'; } break; } } } }
+function submitGuess() {
+  const row = currentRow[currentTeam - 1];
+  const word = currentTeam === 1 ? word1 : word2;
+  const guesses = currentTeam === 1 ? guesses1 : guesses2;
+  const guess = guesses[row].join('');
 
-// Apply colors to board for (let i = 0; i < word.length; i++) { const cellId = board${currentTeam}-cell-${row * word.length + i}; const cell = document.getElementById(cellId); cell.style.backgroundColor = colors[i] === 'correct' ? '#6aaa64' : colors[i] === 'present' ? '#c9b458' : '#787c7e'; cell.style.color = 'white'; }
+  if (guess.length !== word.length) return;
 
-updateKeyboardColors();
+  const colors = Array(word.length).fill('absent');
+  const used = Array(word.length).fill(false);
 
-// Win check if (guess === word) { alert(فريق ${currentTeam} فاز! ✅); return; }
+  // Correct letters
+  for (let i = 0; i < word.length; i++) {
+    if (guess[i] === word[i]) {
+      colors[i] = 'correct';
+      used[i] = true;
+      keyboardColors[currentTeam][guess[i]] = 'correct';
+    }
+  }
 
-currentRow[currentTeam - 1]++; currentCol[currentTeam - 1] = 0;
+  // Present letters
+  for (let i = 0; i < word.length; i++) {
+    if (colors[i] !== 'correct') {
+      for (let j = 0; j < word.length; j++) {
+        if (!used[j] && guess[i] === word[j]) {
+          colors[i] = 'present';
+          used[j] = true;
+          if (keyboardColors[currentTeam][guess[i]] !== 'correct') {
+            keyboardColors[currentTeam][guess[i]] = 'present';
+          }
+          break;
+        }
+      }
+    }
+  }
 
-if (currentRow[currentTeam - 1] >= attempts) { if (currentRow[0] >= attempts && currentRow[1] >= attempts) { alert('انتهت المحاولات! تعادل. 🤝'); } }
+  // Apply to board
+  for (let i = 0; i < word.length; i++) {
+    const cellId = `board${currentTeam}-cell-${row * word.length + i}`;
+    const cell = document.getElementById(cellId);
+    cell.style.backgroundColor =
+      colors[i] === 'correct'
+        ? '#6aaa64'
+        : colors[i] === 'present'
+        ? '#c9b458'
+        : '#787c7e';
+    cell.style.color = 'white';
+  }
 
-toggleTurn(); }
+  updateKeyboardColors();
 
-function toggleTurn() { currentTeam = currentTeam === 1 ? 2 : 1; document.getElementById('current-turn').textContent = دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}; document.querySelector('.team1').classList.toggle('active', currentTeam === 1); document.querySelector('.team2').classList.toggle('active', currentTeam === 2); updateKeyboardColors(); }
+  // Win check
+  if (guess === word) {
+    alert(`فريق ${currentTeam} فاز! ✅`);
+    return;
+  }
 
-function handleKeyboardEvents(e) { if (e.key === 'Enter') { submitGuess(); } else if (e.key === 'Backspace') { deleteLetter(); } else if (/^[؀-ۿ]$/.test(e.key)) { handleKey(e.key); } }
+  currentRow[currentTeam - 1]++;
+  currentCol[currentTeam - 1] = 0;
 
-window.onload = () => { createBoard('board1', word1.length, attempts); createBoard('board2', word2.length, attempts); renderKeyboard(); document.addEventListener('keydown', handleKeyboardEvents); };
+  if (currentRow[currentTeam - 1] >= attempts) {
+    if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
+      alert('انتهت المحاولات! تعادل. 🤝');
+    }
+  }
 
-  
+  toggleTurn();
+}
+
+function toggleTurn() {
+  currentTeam = currentTeam === 1 ? 2 : 1;
+  document.getElementById('current-turn').textContent =
+    `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
+  document.querySelector('.team1').classList.toggle('active', currentTeam === 1);
+  document.querySelector('.team2').classList.toggle('active', currentTeam === 2);
+  updateKeyboardColors();
+}
+
+function handleKeyboardEvents(e) {
+  if (e.key === 'Enter') {
+    submitGuess();
+  } else if (e.key === 'Backspace') {
+    deleteLetter();
+  } else if (/^[؀-ۿ]$/.test(e.key)) {
+    handleKey(e.key);
+  }
+}
+
+window.onload = () => {
+  if (!word1 || !word2) {
+    alert("لم يتم إدخال الكلمات بعد.");
+    return;
+  }
+
+  createBoard('board1', word1.length, attempts);
+  createBoard('board2', word2.length, attempts);
+  renderKeyboard();
+  document.addEventListener('keydown', handleKeyboardEvents);
+};
