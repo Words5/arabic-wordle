@@ -1,94 +1,103 @@
 body {
-  background: linear-gradient(to right, #1d3557, #e63946);
-  font-family: 'Cairo', sans-serif;
-  color: white;
   margin: 0;
-  padding: 0;
+  font-family: 'Cairo', sans-serif;
+  background: linear-gradient(-45deg, #1d3557, #e63946, #1d3557, #e63946);
+  background-size: 400% 400%;
+  animation: smokeFlow 15s ease infinite;
+  color: white;
   text-align: center;
   min-height: 100vh;
+  font-size: 20px;
 }
 
-.page {
-  padding: 20px;
+@keyframes smokeFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-.form-container {
-  background-color: rgba(0,0,0,0.2);
-  border-radius: 12px;
-  padding: 30px;
-  max-width: 400px;
-  margin: 50px auto;
+.inputs {
+  margin: 30px;
+  font-size: 22px;
 }
 
 input {
-  width: 90%;
-  padding: 10px;
+  padding: 12px;
   margin: 10px;
-  font-size: 18px;
+  font-size: 20px;
   border-radius: 6px;
   border: none;
+  width: 200px;
 }
 
 button {
-  padding: 12px 20px;
-  font-size: 18px;
-  background-color: #f1faee;
-  color: #1d3557;
+  padding: 12px 25px;
+  font-size: 20px;
+  background-color: white;
+  color: black;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   margin-top: 15px;
-}
-
-.header {
-  padding: 20px 0;
-  font-size: 1.5em;
 }
 
 .game-area {
   display: flex;
   justify-content: space-around;
-  padding: 20px;
+  padding: 30px;
+  gap: 40px;
   flex-wrap: wrap;
-  gap: 20px;
 }
 
 .team {
   flex: 1;
-  max-width: 400px;
+  max-width: 600px;
 }
 
 .board {
   display: grid;
-  gap: 5px;
+  gap: 8px;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .cell {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ccc;
+  width: 55px;
+  height: 55px;
+  border: 2px solid #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  font-size: 28px;
+  background-color: white;
   color: black;
-  font-size: 20px;
   font-weight: bold;
 }
 
 .keyboard-container {
-  margin-top: 20px;
+  margin-top: 40px;
+  padding: 20px;
+  background-color: rgba(0,0,0,0.1);
+  border-top: 1px solid #fff;
 }
 
 .key {
-  margin: 3px;
-  padding: 10px 14px;
-  font-size: 18px;
-  border-radius: 6px;
+  margin: 6px;
+  padding: 14px 18px;
   border: none;
+  border-radius: 8px;
+  font-size: 24px;
   cursor: pointer;
+  background-color: white;
+  color: black;
+  font-weight: bold;
+  min-width: 50px;
 }
 
 .key.correct {
@@ -107,15 +116,32 @@ button {
 }
 
 .team1.active .turn-indicator {
-  background-color: #e63946;
-  height: 10px;
-  border-radius: 5px;
-  margin-top: 10px;
+  background-color: #ff3b3b;
+  opacity: 1;
+  box-shadow: 0 0 10px 3px #ff3b3b;
 }
 
 .team2.active .turn-indicator {
   background-color: #4da6ff;
-  height: 10px;
-  border-radius: 5px;
-  margin-top: 10px;
+  opacity: 1;
+  box-shadow: 0 0 10px 3px #4da6ff;
 }
+
+.turn-indicator {
+  height: 22px;
+  border-radius: 10px;
+  margin-top: 12px;
+  opacity: 0.4;
+}
+
+h1, h2 {
+  font-size: 32px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 30px;
+  align-items: center;
+  margin-top: 20px;
+    }
