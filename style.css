@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(to right, #2c2c54, #000000, #6e1414);
+  background: linear-gradient(to right, #1d3557, #e63946);
   font-family: 'Cairo', sans-serif;
   color: white;
   margin: 0;
@@ -82,4 +82,4 @@ body {
 .key.absent {
   background-color: #787c7e;
   color: white;
-  }
+}
