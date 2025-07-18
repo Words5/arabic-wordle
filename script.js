@@ -1,22 +1,23 @@
+const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
 let word1 = '';
 let word2 = '';
 let attempts = 6;
 let currentTeam = 1;
-let currentRow = [0, 0];
-let currentCol = [0, 0];
+
 let guesses1 = [];
 let guesses2 = [];
-let keyboardColors = { 1: {}, 2: {} };
+let currentRow = [0, 0];
+let currentCol = [0, 0];
 
-const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
+let keyboardColors = { 1: {}, 2: {} };
 
 function startGame() {
   word1 = document.getElementById('word1').value.trim();
   word2 = document.getElementById('word2').value.trim();
-  attempts = parseInt(document.getElementById('attempts').value) || 6;
+  attempts = Math.max(3, Math.min(10, parseInt(document.getElementById('attempts').value) || 6));
 
-  if (!word1 || !word2 || word1.length !== word2.length) {
-    alert('تأكد من كتابة كلمتين متساويتين في الطول');
+  if (word1.length < 3 || word2.length < 3) {
+    alert('الكلمتين يجب أن تكونا على الأقل 3 أحرف');
     return;
   }
 
@@ -24,6 +25,7 @@ function startGame() {
   guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
   currentRow = [0, 0];
   currentCol = [0, 0];
+  keyboardColors = { 1: {}, 2: {} };
 
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = 'block';
@@ -31,7 +33,7 @@ function startGame() {
   createBoard('board1', word1.length, attempts);
   createBoard('board2', word2.length, attempts);
   renderKeyboard();
-  updateTurnUI();
+  updateTurnIndicator();
 }
 
 function createBoard(containerId, wordLength, attempts) {
@@ -56,66 +58,83 @@ function renderKeyboard() {
       key.textContent = letter;
       key.className = 'key';
       key.onclick = () => handleKey(letter);
+      key.id = `key-${letter}`;
       rowDiv.appendChild(key);
     });
     keyboardDiv.appendChild(rowDiv);
   });
 
-  const controlRow = document.createElement('div');
-  const enter = document.createElement('button');
-  enter.textContent = '⏎';
-  enter.className = 'key';
-  enter.onclick = () => submitGuess();
+  const controls = document.createElement('div');
+  const enterBtn = document.createElement('button');
+  enterBtn.textContent = '⏎';
+  enterBtn.className = 'key';
+  enterBtn.onclick = () => submitGuess();
 
-  const del = document.createElement('button');
-  del.textContent = '⌫';
-  del.className = 'key';
-  del.onclick = () => deleteLetter();
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = '⌫';
+  deleteBtn.className = 'key';
+  deleteBtn.onclick = () => deleteLetter();
 
-  controlRow.appendChild(enter);
-  controlRow.appendChild(del);
-  keyboardDiv.appendChild(controlRow);
+  controls.appendChild(enterBtn);
+  controls.appendChild(deleteBtn);
+  keyboardDiv.appendChild(controls);
 
   updateKeyboardColors();
 }
 
+function updateTurnIndicator() {
+  document.getElementById('current-turn').textContent =
+    `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
+  document.querySelector('.team1').classList.toggle('active', currentTeam === 1);
+  document.querySelector('.team2').classList.toggle('active', currentTeam === 2);
+}
+
+function updateKeyboardColors() {
+  const colorMap = keyboardColors[currentTeam];
+  document.querySelectorAll('.key').forEach(key => {
+    const letter = key.textContent;
+    key.className = 'key';
+    if (colorMap[letter]) {
+      key.classList.add(colorMap[letter]);
+    }
+  });
+}
+
 function handleKey(letter) {
-  const teamIndex = currentTeam - 1;
+  const idx = currentTeam - 1;
   const word = currentTeam === 1 ? word1 : word2;
   const guesses = currentTeam === 1 ? guesses1 : guesses2;
-
-  let row = currentRow[teamIndex];
-  let col = currentCol[teamIndex];
+  let row = currentRow[idx];
+  let col = currentCol[idx];
 
   if (col < word.length && row < attempts) {
     guesses[row][col] = letter;
     const cellId = `board${currentTeam}-cell-${row * word.length + col}`;
     document.getElementById(cellId).textContent = letter;
-    currentCol[teamIndex]++;
+    currentCol[idx]++;
   }
 }
 
 function deleteLetter() {
-  const teamIndex = currentTeam - 1;
+  const idx = currentTeam - 1;
   const word = currentTeam === 1 ? word1 : word2;
   const guesses = currentTeam === 1 ? guesses1 : guesses2;
-
-  let row = currentRow[teamIndex];
-  let col = currentCol[teamIndex];
+  let row = currentRow[idx];
+  let col = currentCol[idx];
 
   if (col > 0) {
-    currentCol[teamIndex]--;
-    guesses[row][currentCol[teamIndex]] = '';
-    const cellId = `board${currentTeam}-cell-${row * word.length + currentCol[teamIndex]}`;
+    currentCol[idx]--;
+    guesses[row][currentCol[idx]] = '';
+    const cellId = `board${currentTeam}-cell-${row * word.length + currentCol[idx]}`;
     document.getElementById(cellId).textContent = '';
   }
 }
 
 function submitGuess() {
-  const teamIndex = currentTeam - 1;
+  const idx = currentTeam - 1;
   const word = currentTeam === 1 ? word1 : word2;
   const guesses = currentTeam === 1 ? guesses1 : guesses2;
-  const row = currentRow[teamIndex];
+  const row = currentRow[idx];
   const guess = guesses[row].join('');
 
   if (guess.length !== word.length) return;
@@ -132,7 +151,7 @@ function submitGuess() {
   }
 
   for (let i = 0; i < word.length; i++) {
-    if (colors[i] !== 'correct') {
+    if (colors[i] === 'absent') {
       for (let j = 0; j < word.length; j++) {
         if (!used[j] && guess[i] === word[j]) {
           colors[i] = 'present';
@@ -155,15 +174,15 @@ function submitGuess() {
   updateKeyboardColors();
 
   if (guess === word) {
-    showPopup(`🎉 فريق ${currentTeam} فاز!`);
+    alert(`🎉 فريق ${currentTeam} فاز!`);
     return;
   }
 
-  currentRow[teamIndex]++;
-  currentCol[teamIndex] = 0;
+  currentRow[idx]++;
+  currentCol[idx] = 0;
 
   if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
-    showPopup('😢 انتهت المحاولات! تعادل 🤝');
+    alert('انتهت المحاولات! تعادل 🤝');
     return;
   }
 
@@ -172,35 +191,11 @@ function submitGuess() {
 
 function toggleTurn() {
   currentTeam = currentTeam === 1 ? 2 : 1;
-  updateTurnUI();
+  updateTurnIndicator();
   updateKeyboardColors();
 }
 
-function updateTurnUI() {
-  document.getElementById('current-turn').textContent =
-    `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
-  document.querySelector('.team1').classList.toggle('active', currentTeam === 1);
-  document.querySelector('.team2').classList.toggle('active', currentTeam === 2);
-}
-
-function updateKeyboardColors() {
-  const colorMap = keyboardColors[currentTeam];
-  document.querySelectorAll('.key').forEach(key => {
-    const letter = key.textContent;
-    key.className = 'key';
-    if (colorMap[letter]) key.classList.add(colorMap[letter]);
-  });
-}
-
-function showPopup(message) {
-  document.getElementById('popup-content').innerHTML = `
-    <p>${message}</p>
-    <button onclick="location.reload()">🔄 لعب من جديد</button>
-  `;
-  document.getElementById('popup').style.display = 'flex';
-}
-
-document.addEventListener('keydown', e => {
+document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') submitGuess();
   else if (e.key === 'Backspace') deleteLetter();
   else if (/^[؀-ۿ]$/.test(e.key)) handleKey(e.key);
