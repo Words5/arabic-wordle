@@ -3,41 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تحدي الكلمات</title>
+  <title>تحدي الكلمات - فريقين</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="page1" class="page">
-    <div class="form-container">
-      <h2>إدخال كلمات الفريقين</h2>
-      <label>كلمة الفريق الأحمر:</label>
-      <input type="text" id="word1" maxlength="8" />
-      <label>كلمة الفريق الأزرق:</label>
-      <input type="text" id="word2" maxlength="8" />
-      <label>عدد المحاولات:</label>
-      <input type="number" id="attempts" min="1" max="10" value="6" />
-      <button onclick="startGame()">ابدأ اللعبة</button>
+
+  <div id="start-screen">
+    <h1>لعبة الكلمة المخبأة</h1>
+    <div class="inputs">
+      <input type="text" id="word1" placeholder="كلمة فريق 1" maxlength="10" />
+      <input type="text" id="word2" placeholder="كلمة فريق 2" maxlength="10" />
+      <input type="number" id="attempts" placeholder="عدد المحاولات" min="1" max="10" />
     </div>
+    <button onclick="startGame()">ابدأ اللعبة</button>
   </div>
 
-  <div id="page2" class="page" style="display:none;">
+  <div id="game-screen" style="display:none;">
     <div class="header">
       <h2 id="current-turn">دور: فريق 1 🔴</h2>
+      <button onclick="location.reload()">🔁 إعادة اللعبة</button>
     </div>
     <div class="game-area">
       <div class="team team1 active">
-        <h3>🔴 الفريق 1</h3>
-        <div class="board" id="board1"></div>
+        <h3>فريق 1 🔴</h3>
         <div class="turn-indicator"></div>
+        <div id="board1" class="board"></div>
       </div>
       <div class="team team2">
-        <h3>🔵 الفريق 2</h3>
-        <div class="board" id="board2"></div>
+        <h3>فريق 2 🔵</h3>
         <div class="turn-indicator"></div>
+        <div id="board2" class="board"></div>
       </div>
     </div>
-    <div class="keyboard-container" id="keyboard"></div>
-    <button onclick="location.reload()">🔁 إعادة اللعبة</button>
+    <div id="keyboard" class="keyboard-container"></div>
   </div>
 
   <script src="script.js"></script>
