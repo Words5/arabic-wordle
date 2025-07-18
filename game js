@@ -14,22 +14,16 @@ let keyboardColors = { 1: {}, 2: {} };
 
 function createBoard(containerId, wordLength, attempts) {
   const board = document.getElementById(containerId);
-  board.style.display = 'grid';
   board.style.gridTemplateColumns = `repeat(${wordLength}, 40px)`;
-  board.style.gap = '5px';
   for (let i = 0; i < attempts * wordLength; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.id = `${containerId}-cell-${i}`;
-    cell.style.width = '40px';
-    cell.style.height = '40px';
-    cell.style.border = '1px solid #ccc';
-    cell.style.display = 'flex';
-    cell.style.alignItems = 'center';
-    cell.style.justifyContent = 'center';
-    cell.style.fontSize = '20px';
-    cell.style.backgroundColor = 'white';
-    cell.style.color = 'black';
+    cell.style.cssText = `
+      width: 40px; height: 40px; border: 1px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; background-color: white; color: black;
+    `;
     board.appendChild(cell);
   }
 }
@@ -186,6 +180,25 @@ function toggleTurn() {
   updateKeyboardColors();
 }
 
+function restartGame() {
+  localStorage.removeItem('word1');
+  localStorage.removeItem('word2');
+  localStorage.removeItem('attempts');
+  window.location.href = 'index.html';
+}
+
+window.onload = () => {
+  if (!word1 || !word2) {
+    alert("يرجى إدخال الكلمات أولاً");
+    window.location.href = "index.html";
+    return;
+  }
+  createBoard('board1', word1.length, attempts);
+  createBoard('board2', word2.length, attempts);
+  renderKeyboard();
+  document.addEventListener('keydown', handleKeyboardEvents);
+};
+
 function handleKeyboardEvents(e) {
   if (e.key === 'Enter') {
     submitGuess();
@@ -195,15 +208,3 @@ function handleKeyboardEvents(e) {
     handleKey(e.key);
   }
 }
-
-function restartGame() {
-  localStorage.clear();
-  window.location.href = 'index.html';
-}
-
-window.onload = () => {
-  createBoard('board1', word1.length, attempts);
-  createBoard('board2', word2.length, attempts);
-  renderKeyboard();
-  document.addEventListener('keydown', handleKeyboardEvents);
-};
