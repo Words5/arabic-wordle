@@ -1,46 +1,120 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>تحدي الفريقين</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تحدي الكلمة ⚔️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #457b9d, #e63946);
+      font-family: 'Cairo', sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 20px 0;
+      background-color: rgba(0,0,0,0.2);
+      font-size: 1.5em;
+    }
+
+    .game-area {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .team {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .board {
+      display: grid;
+      gap: 5px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .turn-indicator {
+      height: 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      opacity: 0.4;
+    }
+
+    .team1.active .turn-indicator {
+      background-color: #ff3b3b;
+      opacity: 1;
+      box-shadow: 0 0 10px 3px #ff3b3b;
+    }
+
+    .team2.active .turn-indicator {
+      background-color: #4da6ff;
+      opacity: 1;
+      box-shadow: 0 0 10px 3px #4da6ff;
+    }
+
+    .keyboard-container {
+      margin-top: 30px;
+      padding: 10px;
+      background-color: rgba(0,0,0,0.1);
+      border-top: 1px solid #fff;
+    }
+
+    .key {
+      margin: 4px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .key.correct {
+      background-color: #6aaa64;
+      color: white;
+    }
+
+    .key.present {
+      background-color: #c9b458;
+      color: white;
+    }
+
+    .key.absent {
+      background-color: #787c7e;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-
-  <div class="config">
-    <label>كلمة فريق 1:</label>
-    <input type="text" id="word1" maxlength="6" />
-
-    <label>كلمة فريق 2:</label>
-    <input type="text" id="word2" maxlength="6" />
-
-    <label>عدد المحاولات:</label>
-    <input type="number" id="attempts" min="3" max="10" value="6" />
-
-    <button onclick="startGame()">ابدأ التحدي</button>
+  <div class="header">
+    <h1>تحدي الكلمة ⚔️</h1>
+    <div id="current-turn">دور: فريق 1 🔴</div>
   </div>
 
-  <div id="game" class="hidden">
-    <div class="board-container">
-      <div class="team1">
-        <h2>فريق 1 🔴</h2>
-        <div id="board1" class="board"></div>
-        <div class="turn-indicator"></div>
-      </div>
-      <div class="team2">
-        <h2>🔵 فريق 2</h2>
-        <div id="board2" class="board"></div>
-        <div class="turn-indicator"></div>
-      </div>
+  <div class="game-area">
+    <div class="team team1 active">
+      <h2>فريق 1 🔴</h2>
+      <div id="board1" class="board"></div>
+      <div class="turn-indicator"></div>
     </div>
 
-    <div id="current-turn">دور: فريق 1</div>
+    <div class="team team2">
+      <h2>🔵 فريق 2</h2>
+      <div id="board2" class="board"></div>
+      <div class="turn-indicator"></div>
+    </div>
+  </div>
 
-    <div class="keyboard" id="keyboard"></div>
-
-    <div id="result"></div>
-    <button onclick="location.reload()">🔁 إعادة اللعبة</button>
+  <div class="keyboard-container">
+    <div id="keyboard"></div>
   </div>
 
   <script src="script.js"></script>
