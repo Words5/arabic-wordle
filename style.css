@@ -14,25 +14,6 @@ body {
   font-size: 1.5em;
 }
 
-.container {
-  padding: 30px;
-}
-
-input, button {
-  font-size: 18px;
-  padding: 8px 12px;
-  margin: 10px;
-  border-radius: 6px;
-  border: none;
-}
-
-button {
-  background-color: white;
-  color: #e63946;
-  cursor: pointer;
-  font-weight: bold;
-}
-
 .game-area {
   display: flex;
   justify-content: space-around;
