@@ -1,22 +1,37 @@
-const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
+const keyboardLayout = [ 'جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ' ];
 
 let currentTeam = 1;
-let word1 = localStorage.getItem('word1');
-let word2 = localStorage.getItem('word2');
-let attempts = parseInt(localStorage.getItem('attempts')) || 6;
+let word1 = '';
+let word2 = '';
+let attempts = 6;
 
-// تحقق من صحة البيانات
-if (!word1 || !word2 || isNaN(attempts)) {
-  alert("يرجى إدخال الكلمات أولاً من الصفحة الرئيسية.");
-  window.location.href = "index.html";
-}
-
-let guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill(''));
-let guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
+let guesses1 = [];
+let guesses2 = [];
 let currentRow = [0, 0];
 let currentCol = [0, 0];
 
 let keyboardColors = { 1: {}, 2: {} };
+
+function startGame() {
+  word1 = document.getElementById('word1').value.trim();
+  word2 = document.getElementById('word2').value.trim();
+  attempts = parseInt(document.getElementById('attempts').value);
+
+  if (!word1 || !word2 || word1.length !== word2.length) {
+    alert('الكلمتان يجب أن تكونا بنفس الطول!');
+    return;
+  }
+
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+
+  guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill(''));
+  guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
+
+  createBoard('board1', word1.length, attempts);
+  createBoard('board2', word2.length, attempts);
+  renderKeyboard();
+}
 
 function createBoard(containerId, wordLength, attempts) {
   const board = document.getElementById(containerId);
@@ -25,15 +40,6 @@ function createBoard(containerId, wordLength, attempts) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.id = `${containerId}-cell-${i}`;
-    cell.style.width = '40px';
-    cell.style.height = '40px';
-    cell.style.border = '1px solid #ccc';
-    cell.style.display = 'flex';
-    cell.style.alignItems = 'center';
-    cell.style.justifyContent = 'center';
-    cell.style.fontSize = '20px';
-    cell.style.backgroundColor = 'white';
-    cell.style.color = 'black';
     board.appendChild(cell);
   }
 }
@@ -41,6 +47,7 @@ function createBoard(containerId, wordLength, attempts) {
 function renderKeyboard() {
   const keyboardDiv = document.getElementById('keyboard');
   keyboardDiv.innerHTML = '';
+
   keyboardLayout.forEach(row => {
     const rowDiv = document.createElement('div');
     [...row].forEach(letter => {
@@ -161,10 +168,9 @@ function submitGuess() {
   currentRow[currentTeam - 1]++;
   currentCol[currentTeam - 1] = 0;
 
-  if (currentRow[currentTeam - 1] >= attempts) {
-    if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
-      alert('انتهت المحاولات! تعادل. 🤝');
-    }
+  if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
+    alert('انتهت المحاولات! تعادل 🤝');
+    return;
   }
 
   toggleTurn();
@@ -178,16 +184,12 @@ function toggleTurn() {
   updateKeyboardColors();
 }
 
-function handleKeyboardEvents(e) {
-  if (e.key === 'Enter') submitGuess();
-  else if (e.key === 'Backspace') deleteLetter();
-  else if (/^[؀-ۿ]$/.test(e.key)) handleKey(e.key);
-}
-
-window.onload = () => {
-  createBoard('board1', word1.length, attempts);
-  createBoard('board2', word2.length, attempts);
-  renderKeyboard();
-  document.addEventListener('keydown', handleKeyboardEvents);
-  toggleTurn();
-};
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    submitGuess();
+  } else if (e.key === 'Backspace') {
+    deleteLetter();
+  } else if (/^[؀-ۿ]$/.test(e.key)) {
+    handleKey(e.key);
+  }
+});
