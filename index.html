@@ -2,40 +2,39 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>إعداد اللعبة</title>
+  <title>إدخال الكلمات</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="setup-page">
-  <div class="setup-container">
-    <h1>لعبة الكلمات الجماعية</h1>
-    
-    <label>كلمة فريق الأحمر:</label>
-    <input type="text" id="word1" maxlength="8" />
+<body>
+  <div class="container">
+    <h1>لعبة الكلمات</h1>
 
-    <label>كلمة فريق الأزرق:</label>
-    <input type="text" id="word2" maxlength="8" />
+    <label>كلمة الفريق الأحمر:</label>
+    <input type="text" id="word1" />
+
+    <label>كلمة الفريق الأزرق:</label>
+    <input type="text" id="word2" />
 
     <label>عدد المحاولات:</label>
-    <input type="number" id="attempts" value="6" min="1" max="10" />
+    <input type="number" id="attempts" value="6" />
 
     <button onclick="startGame()">ابدأ اللعبة</button>
   </div>
 
   <script>
     function startGame() {
-      const word1 = document.getElementById('word1').value.trim();
-      const word2 = document.getElementById('word2').value.trim();
-      const attempts = parseInt(document.getElementById('attempts').value);
+      const word1 = document.getElementById("word1").value.trim();
+      const word2 = document.getElementById("word2").value.trim();
+      const attempts = parseInt(document.getElementById("attempts").value);
 
-      if (!word1 || !word2 || word1.length !== word2.length) {
-        alert("تأكد من إدخال كلمتين بنفس الطول.");
-        return;
+      if (word1 && word2 && attempts > 0) {
+        localStorage.setItem("word1", word1);
+        localStorage.setItem("word2", word2);
+        localStorage.setItem("attempts", attempts);
+        window.location.href = "game.html";
+      } else {
+        alert("رجاءً أدخل كلمات صحيحة وعدد محاولات.");
       }
-
-      localStorage.setItem('word1', word1);
-      localStorage.setItem('word2', word2);
-      localStorage.setItem('attempts', attempts);
-      window.location.href = 'game.html';
     }
   </script>
 </body>
