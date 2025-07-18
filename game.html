@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اللعبة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .turn-indicator {
+      font-size: 24px;
+      margin: 15px 0;
+    }
+
+    .team1.active, .team2.active {
+      font-weight: bold;
+      font-size: 28px;
+    }
+
+    .board {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px;
+    }
+
+    #keyboard {
+      margin-top: 30px;
+    }
+
+    .key {
+      margin: 3px;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .correct { background-color: green; color: white; }
+    .present { background-color: orange; color: white; }
+    .absent { background-color: #444; color: white; }
+  </style>
+</head>
+<body>
+
+  <div class="turn-indicator" id="current-turn">دور: فريق 1 🔴</div>
+
+  <div class="board">
+    <div class="team1">🔴 فريق 1</div>
+    <div class="team2">🔵 فريق 2</div>
+  </div>
+
+  <div id="game-board">
+    <!-- مربعات التخمين ستظهر هنا لاحقًا -->
+  </div>
+
+  <div id="keyboard"></div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
