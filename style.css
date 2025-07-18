@@ -1,153 +1,130 @@
 body {
-  margin: 0;
-  font-family: 'Cairo', sans-serif;
   background: linear-gradient(to right, #1d3557, #e63946);
+  font-family: 'Cairo', sans-serif;
   color: white;
+  margin: 0;
+  padding: 0;
+  text-align: center;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-h1, h2 {
-  margin: 10px 0;
-}
-
-#start-screen,
-#game-screen {
-  padding: 40px 20px;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 #start-screen {
-  display: flex;
+  padding: 40px 20px;
 }
 
-input[type="text"],
-input[type="number"] {
-  padding: 12px;
+#start-screen input, #start-screen button {
   margin: 10px;
+  padding: 10px;
+  font-size: 1.2em;
   border-radius: 8px;
   border: none;
-  width: 250px;
-  font-size: 16px;
 }
 
-button {
-  padding: 14px 28px;
-  margin: 15px;
-  font-size: 18px;
-  background-color: #ffffff;
-  color: #1d3557;
-  border: none;
-  border-radius: 10px;
+#start-screen button {
+  background-color: #e63946;
+  color: white;
   cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
 }
 
-button:hover {
-  background-color: #f1faee;
+#game-screen {
+  padding: 20px;
 }
 
 .board {
   display: grid;
-  gap: 10px;
+  gap: 5px;
   justify-content: center;
-  margin-top: 20px;
+  margin: 10px 0;
 }
 
 .cell {
-  width: 60px;
-  height: 60px;
-  border: 2px solid #ccc;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: black;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  font-weight: bold;
-  background-color: white;
-  color: black;
   border-radius: 4px;
 }
 
-#keyboard {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.keyboard-container {
+  margin-top: 30px;
+  padding: 10px;
 }
 
 .key {
-  margin: 5px;
-  padding: 18px 22px;
-  font-size: 22px;
-  font-weight: bold;
+  margin: 4px;
+  padding: 14px 18px;
+  font-size: 20px;
+  border-radius: 6px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  background-color: #eeeeee;
-  color: #333;
-  transition: 0.2s;
-}
-
-.key:hover {
-  background-color: #ddd;
 }
 
 .key.correct {
-  background-color: #6aaa64 !important;
+  background-color: #6aaa64;
   color: white;
 }
 
 .key.present {
-  background-color: #c9b458 !important;
+  background-color: #c9b458;
   color: white;
 }
 
 .key.absent {
-  background-color: #787c7e !important;
+  background-color: #787c7e;
   color: white;
 }
 
-.team {
-  margin: 20px;
-  text-align: center;
-}
-
 .turn-indicator {
-  margin-top: 10px;
-  height: 8px;
-  border-radius: 4px;
-  background-color: #ffffff33;
+  height: 10px;
+  margin-top: 8px;
+  opacity: 0.4;
+  border-radius: 5px;
 }
 
 .team1.active .turn-indicator {
-  background-color: #e63946;
-  box-shadow: 0 0 10px #e63946;
+  background-color: #ff3b3b;
+  opacity: 1;
 }
 
 .team2.active .turn-indicator {
-  background-color: #1d3557;
-  box-shadow: 0 0 10px #1d3557;
+  background-color: #4da6ff;
+  opacity: 1;
 }
 
-#current-turn {
-  font-size: 24px;
-  margin-bottom: 30px;
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }
 
-@media (max-width: 768px) {
-  .cell {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-  }
+.popup-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  color: black;
+  font-size: 1.4em;
+}
 
-  .key {
-    padding: 10px 14px;
-    font-size: 16px;
-  }
-  }
+.reset-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #f1c40f;
+  color: #000;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
