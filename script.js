@@ -1,8 +1,8 @@
 const keyboardLayout = ['جحخهعغفقثصض', 'طكمنتالبيسش', 'دظزوةىرئؤءذ'];
-
 let currentTeam = 1;
-let word1 = localStorage.getItem('word1');
-let word2 = localStorage.getItem('word2');
+
+let word1 = localStorage.getItem('word1') || '';
+let word2 = localStorage.getItem('word2') || '';
 let attempts = parseInt(localStorage.getItem('attempts')) || 6;
 
 let guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill(''));
@@ -51,7 +51,6 @@ function renderKeyboard() {
   });
 
   const controlsRow = document.createElement('div');
-
   const enterBtn = document.createElement('button');
   enterBtn.textContent = '⏎';
   enterBtn.className = 'key';
@@ -81,37 +80,42 @@ function updateKeyboardColors() {
 }
 
 function handleKey(letter) {
-  let row = currentRow[currentTeam - 1];
-  let col = currentCol[currentTeam - 1];
+  const teamIndex = currentTeam - 1;
   const word = currentTeam === 1 ? word1 : word2;
   const guesses = currentTeam === 1 ? guesses1 : guesses2;
+
+  let row = currentRow[teamIndex];
+  let col = currentCol[teamIndex];
 
   if (col < word.length && row < attempts) {
     guesses[row][col] = letter;
     const cellId = `board${currentTeam}-cell-${row * word.length + col}`;
     document.getElementById(cellId).textContent = letter;
-    currentCol[currentTeam - 1]++;
+    currentCol[teamIndex]++;
   }
 }
 
 function deleteLetter() {
-  let row = currentRow[currentTeam - 1];
-  let col = currentCol[currentTeam - 1];
+  const teamIndex = currentTeam - 1;
   const word = currentTeam === 1 ? word1 : word2;
   const guesses = currentTeam === 1 ? guesses1 : guesses2;
 
+  let row = currentRow[teamIndex];
+  let col = currentCol[teamIndex];
+
   if (col > 0) {
-    currentCol[currentTeam - 1]--;
-    guesses[row][currentCol[currentTeam - 1]] = '';
-    const cellId = `board${currentTeam}-cell-${row * word.length + currentCol[currentTeam - 1]}`;
+    currentCol[teamIndex]--;
+    guesses[row][currentCol[teamIndex]] = '';
+    const cellId = `board${currentTeam}-cell-${row * word.length + currentCol[teamIndex]}`;
     document.getElementById(cellId).textContent = '';
   }
 }
 
 function submitGuess() {
-  const row = currentRow[currentTeam - 1];
+  const teamIndex = currentTeam - 1;
   const word = currentTeam === 1 ? word1 : word2;
   const guesses = currentTeam === 1 ? guesses1 : guesses2;
+  const row = currentRow[teamIndex];
   const guess = guesses[row].join('');
 
   if (guess.length !== word.length) return;
@@ -161,10 +165,10 @@ function submitGuess() {
     return;
   }
 
-  currentRow[currentTeam - 1]++;
-  currentCol[currentTeam - 1] = 0;
+  currentRow[teamIndex]++;
+  currentCol[teamIndex] = 0;
 
-  if (currentRow[currentTeam - 1] >= attempts) {
+  if (currentRow[teamIndex] >= attempts) {
     if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
       alert('انتهت المحاولات! تعادل. 🤝');
     }
@@ -175,7 +179,8 @@ function submitGuess() {
 
 function toggleTurn() {
   currentTeam = currentTeam === 1 ? 2 : 1;
-  document.getElementById('current-turn').textContent = `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
+  document.getElementById('current-turn').textContent =
+    `دور: فريق ${currentTeam} ${currentTeam === 1 ? '🔴' : '🔵'}`;
   document.querySelector('.team1').classList.toggle('active', currentTeam === 1);
   document.querySelector('.team2').classList.toggle('active', currentTeam === 2);
   updateKeyboardColors();
