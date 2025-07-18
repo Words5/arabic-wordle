@@ -2,8 +2,10 @@ body {
   font-family: 'Cairo', sans-serif;
   text-align: center;
   direction: rtl;
-  background-color: #f8f9fa;
+  background: linear-gradient(to right, #e63946, #457b9d);
+  color: white;
   padding: 20px;
+  min-height: 100vh;
 }
 
 .config {
@@ -38,7 +40,6 @@ button {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(6, 50px);
   gap: 5px;
   justify-content: center;
 }
@@ -52,6 +53,7 @@ button {
   align-items: center;
   justify-content: center;
   background-color: white;
+  color: black;
   font-weight: bold;
 }
 
@@ -66,6 +68,46 @@ button {
 }
 
 .absent {
-  background-color: #ccc;
+  background-color: #666;
+  color: white;
+}
+
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 5px;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.key {
+  padding: 10px;
+  font-size: 20px;
+  background-color: #eee;
   color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.key.correct { background-color: green; color: white; }
+.key.present { background-color: orange; color: white; }
+.key.absent  { background-color: #555; color: white; }
+
+.turn-indicator {
+  height: 25px;
+  border-radius: 10px;
+  margin-top: 10px;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.team1 .turn-indicator { background-color: #ff3b3b; }
+.team2 .turn-indicator { background-color: #4da6ff; }
+
+.team1.active .turn-indicator,
+.team2.active .turn-indicator {
+  opacity: 1;
+  box-shadow: 0 0 15px 5px currentColor;
 }
