@@ -9,16 +9,27 @@ let guesses1 = Array.from({ length: attempts }, () => Array(word1.length).fill('
 let guesses2 = Array.from({ length: attempts }, () => Array(word2.length).fill(''));
 let currentRow = [0, 0];
 let currentCol = [0, 0];
+
 let keyboardColors = { 1: {}, 2: {} };
 
 function createBoard(containerId, wordLength, attempts) {
   const board = document.getElementById(containerId);
+  board.style.display = 'grid';
   board.style.gridTemplateColumns = `repeat(${wordLength}, 40px)`;
-
+  board.style.gap = '5px';
   for (let i = 0; i < attempts * wordLength; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.id = `${containerId}-cell-${i}`;
+    cell.style.width = '40px';
+    cell.style.height = '40px';
+    cell.style.border = '1px solid #ccc';
+    cell.style.display = 'flex';
+    cell.style.alignItems = 'center';
+    cell.style.justifyContent = 'center';
+    cell.style.fontSize = '20px';
+    cell.style.backgroundColor = 'white';
+    cell.style.color = 'black';
     board.appendChild(cell);
   }
 }
@@ -26,7 +37,6 @@ function createBoard(containerId, wordLength, attempts) {
 function renderKeyboard() {
   const keyboardDiv = document.getElementById('keyboard');
   keyboardDiv.innerHTML = '';
-
   keyboardLayout.forEach(row => {
     const rowDiv = document.createElement('div');
     [...row].forEach(letter => {
@@ -34,12 +44,14 @@ function renderKeyboard() {
       key.textContent = letter;
       key.className = 'key';
       key.onclick = () => handleKey(letter);
+      key.id = `key-${letter}`;
       rowDiv.appendChild(key);
     });
     keyboardDiv.appendChild(rowDiv);
   });
 
   const controlsRow = document.createElement('div');
+
   const enterBtn = document.createElement('button');
   enterBtn.textContent = '⏎';
   enterBtn.className = 'key';
@@ -133,7 +145,13 @@ function submitGuess() {
   for (let i = 0; i < word.length; i++) {
     const cellId = `board${currentTeam}-cell-${row * word.length + i}`;
     const cell = document.getElementById(cellId);
-    cell.classList.add(colors[i]);
+    cell.style.backgroundColor =
+      colors[i] === 'correct'
+        ? '#6aaa64'
+        : colors[i] === 'present'
+        ? '#c9b458'
+        : '#787c7e';
+    cell.style.color = 'white';
   }
 
   updateKeyboardColors();
@@ -146,8 +164,10 @@ function submitGuess() {
   currentRow[currentTeam - 1]++;
   currentCol[currentTeam - 1] = 0;
 
-  if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
-    alert('انتهت المحاولات! تعادل 🤝');
+  if (currentRow[currentTeam - 1] >= attempts) {
+    if (currentRow[0] >= attempts && currentRow[1] >= attempts) {
+      alert('انتهت المحاولات! تعادل. 🤝');
+    }
   }
 
   toggleTurn();
@@ -162,9 +182,13 @@ function toggleTurn() {
 }
 
 function handleKeyboardEvents(e) {
-  if (e.key === 'Enter') submitGuess();
-  else if (e.key === 'Backspace') deleteLetter();
-  else if (/^[\u0600-\u06FF]$/.test(e.key)) handleKey(e.key);
+  if (e.key === 'Enter') {
+    submitGuess();
+  } else if (e.key === 'Backspace') {
+    deleteLetter();
+  } else if (/^[؀-ۿ]$/.test(e.key)) {
+    handleKey(e.key);
+  }
 }
 
 window.onload = () => {
