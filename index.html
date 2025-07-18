@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>لعبة الكلمة السرية</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تحدي الفريقين</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="landing-bg">
-  <div class="overlay-text">WORDS</div>
-  <div class="container">
-    <h1>🤔 لعبة الكلمة السرية</h1>
-    <div class="secret-input special-input">
-      <input type="text" id="secretWord" placeholder="ادخل الكلمة السرية">
-      <button onclick="startGame()">ابدأ</button>
-    </div>
+<body>
 
-    <div id="game" style="display:none;">
-      <div id="board"></div>
-      <input id="guessInput" type="text" style="opacity:0; position:absolute;">
-      <div id="keyboard"></div>
-      <div id="resultMessage"></div>
-      <button id="restartBtn" style="display:none;" onclick="location.reload()">🔄 إعادة اللعب</button>
-    </div>
+  <div class="config">
+    <label>كلمة فريق 1:</label>
+    <input type="text" id="word1" maxlength="6" />
+
+    <label>كلمة فريق 2:</label>
+    <input type="text" id="word2" maxlength="6" />
+
+    <label>عدد المحاولات:</label>
+    <input type="number" id="attempts" min="3" max="10" value="6" />
+
+    <button onclick="startGame()">ابدأ التحدي</button>
   </div>
+
+  <div id="game" class="hidden">
+    <div class="board-container">
+      <div>
+        <h2>فريق 1 🔴</h2>
+        <div id="board1" class="board"></div>
+      </div>
+      <div>
+        <h2>🔵 فريق 2</h2>
+        <div id="board2" class="board"></div>
+      </div>
+    </div>
+    <div id="current-turn">دور: فريق 1</div>
+    <div class="keyboard">
+      <input type="text" id="guessInput" maxlength="6" autofocus />
+      <button onclick="submitGuess()">إرسال التخمين</button>
+    </div>
+    <div id="result"></div>
+    <button onclick="location.reload()">🔁 إعادة اللعبة</button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
