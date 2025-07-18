@@ -6,11 +6,30 @@
   <title>اللعبة</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="game">
   <div class="header">
     <h1>تحدي الكلمة ⚔️</h1>
     <div id="current-turn">دور: فريق 1 🔴</div>
+    <button onclick="location.reload()">🔄 إعادة اللعبة</button>
   </div>
 
   <div class="game-area">
-    <div class="team team
+    <div class="team team1 active">
+      <h2>فريق 1 🔴</h2>
+      <div id="board1" class="board"></div>
+      <div class="turn-indicator"></div>
+    </div>
+    <div class="team team2">
+      <h2>🔵 فريق 2</h2>
+      <div id="board2" class="board"></div>
+      <div class="turn-indicator"></div>
+    </div>
+  </div>
+
+  <div class="keyboard-container">
+    <div id="keyboard"></div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
