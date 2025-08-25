@@ -1,0 +1,177 @@
+<!doctype html>
+
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Realistic Display Box (Three.js)</title>
+  <style>
+    html,body { height:100%; margin:0; }
+    #app { width:100%; height:100%; overflow:hidden; background:#ffffff; }
+    .label { position: absolute; left:12px; top:12px; color:#222; font-family:Inter, Arial; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div class="label">صندوق عرض واقعي — حرّك الفأرة لتدوير</div>  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.152.2/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.152.2/examples/jsm/controls/OrbitControls.js';
+    import { RectAreaLightUniformsLib } from 'https://unpkg.com/three@0.152.2/examples/jsm/lights/RectAreaLightUniformsLib.js';
+    import { RectAreaLightHelper } from 'https://unpkg.com/three@0.152.2/examples/jsm/helpers/RectAreaLightHelper.js';
+
+    // --- basic setup ---
+    const container = document.getElementById('app');
+    const scene = new THREE.Scene();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    container.appendChild(renderer.domElement);
+
+    // camera and controls
+    const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 0.8, 2.6);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0,0.4,0);
+    controls.enableDamping = true;
+
+    // --- environment & subtle ambient lighting ---
+    scene.background = new THREE.Color(0xffffff);
+    const hemi = new THREE.HemisphereLight(0xfffffb, 0x443355, 0.25); // soft fill
+    scene.add(hemi);
+
+    // --- box (frame) ---
+    // We'll make an open-front rectangular box with thickness, internal reflective back
+    const boxOuter = new THREE.Mesh(
+      new THREE.BoxGeometry(1.0, 1.6, 0.8),
+      new THREE.MeshStandardMaterial({ color: 0xffffff })
+    );
+    // hollow by using inner panel subtraction approach (quick approximation): create walls separately
+    const wallThickness = 0.05;
+
+    function makeWall(w,h,d, pos, rot){
+      const geo = new THREE.BoxGeometry(w, h, d);
+      const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.0, roughness: 0.45 });
+      const m = new THREE.Mesh(geo, mat);
+      m.position.copy(pos);
+      if (rot) m.rotation.set(rot.x, rot.y, rot.z);
+      m.castShadow = false;
+      m.receiveShadow = true;
+      scene.add(m);
+      return m;
+    }
+
+    // left wall
+    makeWall(wallThickness, 1.6, 0.8, new THREE.Vector3(-0.5 + wallThickness/2, 0.0, 0));
+    // right wall
+    makeWall(wallThickness, 1.6, 0.8, new THREE.Vector3(0.5 - wallThickness/2, 0.0, 0));
+    // top
+    makeWall(1.0, wallThickness, 0.8, new THREE.Vector3(0, 0.8 - wallThickness/2, 0));
+    // bottom
+    makeWall(1.0, wallThickness, 0.8, new THREE.Vector3(0, -0.8 + wallThickness/2, 0));
+
+    // back panel (slightly reflective to add realism)
+    const backMat = new THREE.MeshStandardMaterial({ color: 0xf7f7f8, metalness: 0.15, roughness: 0.18 });
+    const back = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 1.5), backMat);
+    back.position.set(0, 0, -0.4 + 0.001); // slightly inset
+    back.receiveShadow = true;
+    scene.add(back);
+
+    // small floor inside box to catch soft shadow
+    const innerFloorMat = new THREE.MeshStandardMaterial({ color: 0xf8f8f8, metalness: 0.0, roughness: 0.42 });
+    const innerFloor = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.6), innerFloorMat);
+    innerFloor.rotation.x = -Math.PI/2;
+    innerFloor.position.set(0, -0.5, -0.15);
+    innerFloor.receiveShadow = true;
+    scene.add(innerFloor);
+
+    // --- realistic lighting setup ---
+    // 1) Rect area lights (soft, big sources) - use helper for dev (comment out in production)
+    RectAreaLightUniformsLib.init();
+
+    const topRect = new THREE.RectAreaLight(0xffffff, 6.0, 0.7, 0.18);
+    topRect.position.set(0, 0.72, 0.0);
+    topRect.lookAt(0, 0, -0.2);
+    scene.add(topRect);
+    // helper (uncomment if you want to see the rect light outline)
+    // scene.add(new RectAreaLightHelper(topRect));
+
+    const sideRect = new THREE.RectAreaLight(0xfff9f2, 2.2, 0.45, 0.9);
+    sideRect.position.set(-0.48, 0.0, 0.2);
+    sideRect.lookAt(0, 0, -0.2);
+    scene.add(sideRect);
+
+    // 2) Spot light for crisp soft shadow (casts shadow onto back and floor)
+    const spot = new THREE.SpotLight(0xffffff, 2.1, 5, Math.PI/8, 0.6, 1);
+    spot.position.set(0.5, 1.2, 1.0);
+    spot.target.position.set(0, 0.2, -0.1);
+    spot.castShadow = true;
+    spot.shadow.mapSize.width = 2048;
+    spot.shadow.mapSize.height = 2048;
+    spot.shadow.camera.near = 0.5;
+    spot.shadow.camera.far = 5;
+    scene.add(spot);
+    scene.add(spot.target);
+
+    // subtle fill behind camera
+    const backLight = new THREE.PointLight(0xfff6ee, 0.4, 6);
+    backLight.position.set(0, 0.6, 2.5);
+    scene.add(backLight);
+
+    // floor under the box (to show soft external shadow)
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(6,6),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.0, roughness: 0.6 })
+    );
+    ground.rotation.x = -Math.PI/2;
+    ground.position.y = -1.0;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // small pedestal inside (empty hanger area replacement) - optional visual anchor
+    const pedestalMat = new THREE.MeshStandardMaterial({ color:0xf2f2f2, metalness:0.0, roughness:0.45 });
+    const pedestal = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.02, 0.14), pedestalMat);
+    pedestal.position.set(0, -0.49, -0.05);
+    pedestal.castShadow = true;
+    pedestal.receiveShadow = true;
+    scene.add(pedestal);
+
+    // --- tuning: enhance PBR response with an environment approximation ---
+    // Create a tiny bright sphere around to simulate glossy reflections subtly
+    const envSphereMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent:true, opacity:0.02 });
+    const envSphere = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 8), envSphereMat);
+    envSphere.position.set(0,0,0);
+    scene.add(envSphere);
+
+    // --- responsive resize ---
+    window.addEventListener('resize', onWindowResize);
+    function onWindowResize(){
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    // --- animation loop ---
+    let tPrev = 0;
+    function animate(t){
+      requestAnimationFrame(animate);
+      const dt = (t - tPrev) * 0.001;
+      tPrev = t;
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate(0);
+
+    // --- small UI tuning helpers (optional) ---
+    // Expose a simple debug method on window to quickly tweak light intensity from console
+    window.debugBox = {
+      setTopIntensity(v){ topRect.intensity = v; },
+      setSideIntensity(v){ sideRect.intensity = v; },
+      setSpotIntensity(v){ spot.intensity = v; },
+      setBackRoughness(v){ backMat.roughness = v; }
+    };
+
+  </script></body>
+</html>
