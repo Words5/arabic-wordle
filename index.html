@@ -1,44 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لعبة الكلمات التنافسية</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <!-- نافذة البداية -->
-  <div id="start-screen">
-    <div class="start-container">
-      <h1>🔥 لعبة الكلمات التنافسية 🔵🔴</h1>
-      <input type="text" id="word1" placeholder="كلمة فريق 1 🔴" maxlength="6" />
-      <input type="text" id="word2" placeholder="كلمة فريق 2 🔵" maxlength="6" />
-      <input type="number" id="attempts" placeholder="عدد المحاولات (3 - 10)" min="3" max="10" />
-      <button onclick="startGame()">ابدأ اللعبة</button>
-    </div>
-  </div>
-
-  <!-- واجهة اللعبة -->
-  <div id="game-screen" style="display: none;">
-    <div id="current-turn">دور: فريق 1 🔴</div>
-
-    <div class="teams-container">
-      <div class="team team1">
-        <h2>فريق 1 🔴</h2>
-        <div id="board1" class="board"></div>
-      </div>
-
-      <div class="team team2">
-        <h2>فريق 2 🔵</h2>
-        <div id="board2" class="board"></div>
-      </div>
-    </div>
-
-    <div id="keyboard" class="keyboard-container"></div>
-
-    <button class="restart-btn" onclick="restartGame()">🔁 إعادة اللعبة</button>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
