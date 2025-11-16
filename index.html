@@ -2,43 +2,46 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>Twitch Wheel Game</title>
+    <title>Pro Twitch Wheel Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="setupScreen">
-    <h2>أدخل اسم أو رابط قناة تويتش</h2>
-    
-    <input id="channelInput" type="text" placeholder="xQc أو https://twitch.tv/xQc">
-    
-    <div style="margin-top:10px;">
-        <button id="startBtn">Start</button>
+<div id="setupScreen" class="screen active">
+    <div class="centerBox">
+        <h1 class="title">🎡 Wheel Royale</h1>
+        <p>ضع اسم القناة أو رابطها</p>
+        <input id="channelInput" type="text" placeholder="مثال: xQc أو https://twitch.tv/xQc">
+        <button id="startBtn" class="primary">ابدأ</button>
     </div>
 </div>
 
-<div id="gameUI" style="display:none">
-    <div id="topBar">
-        <button id="backBtn">رجوع</button>
-        <button id="resetPlayersBtn">Reset Players</button>
-        <button id="clearChatBtn">Clear Chat</button>
+<div id="gameScreen" class="screen">
+    <div class="topBar">
+        <button id="backBtn" class="danger">رجوع</button>
+        <button id="resetPlayersBtn" class="warning">تفريغ اللاعبين</button>
+        <button id="clearChatBtn" class="warning">تنظيف الشات</button>
     </div>
 
-    <div id="container">
-        <div id="leftSide">
-            <h2>Wheel Game</h2>
-            <canvas id="wheelCanvas" width="450" height="450"></canvas>
-            <button id="spinBtn">Spin</button>
-            <div id="playersList"></div>
+    <div class="layout">
+        <div class="gameArea">
+            <h2>Wheel Royale</h2>
+            <div class="wheelContainer">
+                <canvas id="wheelCanvas" width="500" height="500"></canvas>
+            </div>
+            <button id="spinBtn" class="primary">Spin</button>
+            <div id="playersList" class="playersBox"></div>
         </div>
 
-        <div id="rightSide">
+        <div class="chatArea">
             <h3>Chat</h3>
-            <div id="chatBox"></div>
+            <div id="chatBox" class="chatBox"></div>
         </div>
     </div>
+
+    <div id="overlayResult" class="overlay hidden"></div>
 </div>
 
 <script src="script.js"></script>
 </body>
-</html>
+    </html>
