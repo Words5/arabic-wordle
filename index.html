@@ -7,10 +7,25 @@
 </head>
 <body>
 
-<h2>Wheel Game</h2>
-<canvas id="wheelCanvas" width="500" height="500"></canvas>
-<button id="spinBtn">Spin</button>
-<div id="playersList"></div>
+<div id="setupScreen">
+    <h2>أدخل اسم قناة تويتش</h2>
+    <input id="channelInput" type="text" placeholder="مثال: xQc أو mithxqo">
+    <button id="startBtn">Start</button>
+</div>
+
+<div id="gameUI" style="display:none">
+    <div id="leftSide">
+        <h2>Wheel Game</h2>
+        <canvas id="wheelCanvas" width="450" height="450"></canvas>
+        <button id="spinBtn">Spin</button>
+        <div id="playersList"></div>
+    </div>
+
+    <div id="rightSide">
+        <h3>Chat</h3>
+        <div id="chatBox"></div>
+    </div>
+</div>
 
 <script src="script.js"></script>
 </body>
