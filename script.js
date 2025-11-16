@@ -1,63 +1,54 @@
 let players = [];
 let ws;
+let spinning = false;
 let currentChannel = "";
 
-// UI elements
 const setupScreen = document.getElementById("setupScreen");
-const gameUI = document.getElementById("gameUI");
+const gameScreen = document.getElementById("gameScreen");
 const chatBox = document.getElementById("chatBox");
 const spinBtn = document.getElementById("spinBtn");
 const canvas = document.getElementById("wheelCanvas");
 const ctx = canvas.getContext("2d");
+const overlay = document.getElementById("overlayResult");
 
-// Extract channel from URL or direct name
+// Extract channel name even if input is a link
 function extractChannel(input) {
     input = input.trim().toLowerCase();
-    
-    if (input.startsWith("https://") || input.startsWith("http://")) {
-        const parts = input.split("/");
-        return parts[parts.length - 1];   // last section in link
+    if (input.includes("twitch.tv/")) {
+        return input.split("twitch.tv/")[1].split("/")[0];
     }
-    
     return input;
 }
 
-// Start button
 document.getElementById("startBtn").onclick = () => {
     const input = document.getElementById("channelInput").value;
     currentChannel = extractChannel(input);
 
-    if (!currentChannel) return alert("❗ الرجاء إدخال اسم أو رابط قناة صحيح");
+    if (!currentChannel) return alert("يرجى إدخال اسم قناة أو رابط صحيح");
 
     startChatConnection(currentChannel);
 
-    setupScreen.style.display = "none";
-    gameUI.style.display = "flex";
+    setupScreen.classList.remove("active");
+    gameScreen.classList.add("active");
 };
 
-// Return to setup screen
 document.getElementById("backBtn").onclick = () => {
-    if (ws) ws.close();
+    ws.close();
     players = [];
     chatBox.innerHTML = "";
-    document.getElementById("playersList").innerText = "";
-    setupScreen.style.display = "block";
-    gameUI.style.display = "none";
+    drawWheel();
+    setupScreen.classList.add("active");
+    gameScreen.classList.remove("active");
 };
 
-// Reset players only
 document.getElementById("resetPlayersBtn").onclick = () => {
     players = [];
     drawWheel();
     updatePlayersList();
 };
 
-// Clear chat only
-document.getElementById("clearChatBtn").onclick = () => {
-    chatBox.innerHTML = "";
-};
+document.getElementById("clearChatBtn").onclick = () => chatBox.innerHTML = "";
 
-// Connect to Twitch chat
 function startChatConnection(channel) {
     ws = new WebSocket("wss://irc-ws.chat.twitch.tv:443");
 
@@ -65,7 +56,7 @@ function startChatConnection(channel) {
         ws.send("PASS SCHMOOPIIE");
         ws.send("NICK justinfan12345");
         ws.send(`JOIN #${channel}`);
-        addChatUI(`✔️ Connected to #${channel}`);
+        addChatUI(`✔️ تم الاتصال بـ #${channel}`);
     };
 
     ws.onmessage = (event) => {
@@ -76,7 +67,7 @@ function startChatConnection(channel) {
 
             addChatUI(`${username}: ${message}`);
 
-            if (message.trim() === "!join" && !players.includes(username)) {
+            if (message.trim().toLowerCase() === "!join" && !players.includes(username)) {
                 players.push(username);
                 drawWheel();
                 updatePlayersList();
@@ -85,7 +76,6 @@ function startChatConnection(channel) {
     };
 }
 
-// Add chat message to UI
 function addChatUI(msg) {
     const el = document.createElement("div");
     el.className = "chatMessage";
@@ -94,39 +84,66 @@ function addChatUI(msg) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Draw wheel visualization
-function drawWheel() {
-    const arc = Math.PI * 2 / players.length;
+function drawWheel(rotation = 0) {
+    const size = players.length;
+    const arc = Math.PI * 2 / size;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < players.length; i++) {
+    if (size === 0) return;
+
+    for (let i = 0; i < size; i++) {
         ctx.beginPath();
-        ctx.fillStyle = `hsl(${i * 50}, 80%, 50%)`;
-        ctx.moveTo(225, 225);
-        ctx.arc(225, 225, 225, arc * i, arc * (i + 1));
-        ctx.lineTo(225, 225);
+        ctx.fillStyle = `hsl(${i * 50}, 85%, 55%)`;
+        ctx.moveTo(250, 250);
+        ctx.arc(250, 250, 250, arc * i + rotation, arc * (i + 1) + rotation);
+        ctx.lineTo(250, 250);
         ctx.fill();
 
         ctx.save();
-        ctx.translate(225, 225);
-        ctx.rotate(arc * i + arc / 2);
+        ctx.translate(250, 250);
+        ctx.rotate(arc * i + arc / 2 + rotation);
         ctx.fillStyle = "#fff";
+        ctx.font = "16px Tahoma";
         ctx.fillText(players[i], 120, 10);
         ctx.restore();
     }
 }
 
-// Display list
+spinBtn.onclick = () => {
+    if (spinning || players.length < 2) return;
+    spinning = true;
+
+    let rotation = Math.random() * Math.PI * 6 + Math.PI * 10;
+    const duration = 3000;
+    const start = performance.now();
+
+    function animate(t) {
+        const progress = (t - start) / duration;
+        if (progress < 1) {
+            drawWheel(rotation * easeOut(progress));
+            requestAnimationFrame(animate);
+        } else {
+            spinning = false;
+            const loserIndex = Math.floor(Math.random() * players.length);
+            showResult(players[loserIndex]);
+            players.splice(loserIndex, 1);
+            drawWheel();
+            updatePlayersList();
+        }
+    }
+    requestAnimationFrame(animate);
+};
+
+function easeOut(x) {
+    return 1 - Math.pow(1 - x, 3);
+}
+
 function updatePlayersList() {
     document.getElementById("playersList").innerText = `Players: ${players.join(", ")}`;
 }
 
-// Spin button
-spinBtn.onclick = () => {
-    if (players.length <= 1) return;
-    const kickedIndex = Math.floor(Math.random() * players.length);
-    alert(`❌ تم إقصاء: ${players[kickedIndex]}`);
-    players.splice(kickedIndex, 1);
-    drawWheel();
-    updatePlayersList();
-};
+function showResult(name) {
+    overlay.innerHTML = `❌ ${name} OUT!`;
+    overlay.classList.remove("hidden");
+    setTimeout(() => overlay.classList.add("hidden"), 1800);
+        }
