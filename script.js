@@ -1,5 +1,6 @@
 let players = [];
 let ws;
+let currentChannel = "";
 
 // UI elements
 const setupScreen = document.getElementById("setupScreen");
@@ -9,15 +10,51 @@ const spinBtn = document.getElementById("spinBtn");
 const canvas = document.getElementById("wheelCanvas");
 const ctx = canvas.getContext("2d");
 
+// Extract channel from URL or direct name
+function extractChannel(input) {
+    input = input.trim().toLowerCase();
+    
+    if (input.startsWith("https://") || input.startsWith("http://")) {
+        const parts = input.split("/");
+        return parts[parts.length - 1];   // last section in link
+    }
+    
+    return input;
+}
+
 // Start button
 document.getElementById("startBtn").onclick = () => {
-    const channelName = document.getElementById("channelInput").value.trim().toLowerCase();
-    if (!channelName) return alert("ادخل اسم قناة صحيح");
+    const input = document.getElementById("channelInput").value;
+    currentChannel = extractChannel(input);
 
-    startChatConnection(channelName);
+    if (!currentChannel) return alert("❗ الرجاء إدخال اسم أو رابط قناة صحيح");
+
+    startChatConnection(currentChannel);
 
     setupScreen.style.display = "none";
     gameUI.style.display = "flex";
+};
+
+// Return to setup screen
+document.getElementById("backBtn").onclick = () => {
+    if (ws) ws.close();
+    players = [];
+    chatBox.innerHTML = "";
+    document.getElementById("playersList").innerText = "";
+    setupScreen.style.display = "block";
+    gameUI.style.display = "none";
+};
+
+// Reset players only
+document.getElementById("resetPlayersBtn").onclick = () => {
+    players = [];
+    drawWheel();
+    updatePlayersList();
+};
+
+// Clear chat only
+document.getElementById("clearChatBtn").onclick = () => {
+    chatBox.innerHTML = "";
 };
 
 // Connect to Twitch chat
@@ -57,7 +94,7 @@ function addChatUI(msg) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Draw wheel
+// Draw wheel visualization
 function drawWheel() {
     const arc = Math.PI * 2 / players.length;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -88,7 +125,7 @@ function updatePlayersList() {
 spinBtn.onclick = () => {
     if (players.length <= 1) return;
     const kickedIndex = Math.floor(Math.random() * players.length);
-    alert(`تم إقصاء: ${players[kickedIndex]}`);
+    alert(`❌ تم إقصاء: ${players[kickedIndex]}`);
     players.splice(kickedIndex, 1);
     drawWheel();
     updatePlayersList();
