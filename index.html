@@ -8,22 +8,34 @@
 <body>
 
 <div id="setupScreen">
-    <h2>أدخل اسم قناة تويتش</h2>
-    <input id="channelInput" type="text" placeholder="مثال: xQc أو mithxqo">
-    <button id="startBtn">Start</button>
+    <h2>أدخل اسم أو رابط قناة تويتش</h2>
+    
+    <input id="channelInput" type="text" placeholder="xQc أو https://twitch.tv/xQc">
+    
+    <div style="margin-top:10px;">
+        <button id="startBtn">Start</button>
+    </div>
 </div>
 
 <div id="gameUI" style="display:none">
-    <div id="leftSide">
-        <h2>Wheel Game</h2>
-        <canvas id="wheelCanvas" width="450" height="450"></canvas>
-        <button id="spinBtn">Spin</button>
-        <div id="playersList"></div>
+    <div id="topBar">
+        <button id="backBtn">رجوع</button>
+        <button id="resetPlayersBtn">Reset Players</button>
+        <button id="clearChatBtn">Clear Chat</button>
     </div>
 
-    <div id="rightSide">
-        <h3>Chat</h3>
-        <div id="chatBox"></div>
+    <div id="container">
+        <div id="leftSide">
+            <h2>Wheel Game</h2>
+            <canvas id="wheelCanvas" width="450" height="450"></canvas>
+            <button id="spinBtn">Spin</button>
+            <div id="playersList"></div>
+        </div>
+
+        <div id="rightSide">
+            <h3>Chat</h3>
+            <div id="chatBox"></div>
+        </div>
     </div>
 </div>
 
