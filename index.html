@@ -17,7 +17,6 @@
         <button id="startBtn" class="btn primary">ابدأ</button>
         <button id="examplesBtn" class="btn ghost">أمثلة</button>
       </div>
-      <p class="hint">النسخة: محترفة بدون أصوات — مصممة لشاشات بث PC</p>
     </div>
   </div>
 
@@ -42,7 +41,6 @@
 
         <div class="wheelWrap">
           <canvas id="wheelCanvas" width="600" height="600"></canvas>
-          <!-- مؤشر السهم العلوي -->
           <div class="pointer"></div>
         </div>
 
@@ -52,14 +50,13 @@
         </div>
       </div>
 
-      <!-- نافذة الشات بنمط HUD (الخيار C) -->
+      <!-- نافذة الشات بنمط HUD -->
       <aside class="chatArea hud">
         <div class="hudHeader">
           <div class="hudTitle">Chat</div>
           <div class="hudSub">قناة: <strong id="channelNameAside">-</strong></div>
         </div>
         <div id="chatBox" class="chatBox"></div>
-
         <div class="hudFooter">
           <input id="manualMsg" placeholder="أرسل رسالة ظهورية (اختياري)" />
           <button id="sendManual" class="btn tiny">Send</button>
@@ -67,7 +64,6 @@
       </aside>
     </div>
 
-    <!-- Overlay لنتيجة الإقصاء -->
     <div id="overlayResult" class="overlay hidden">
       <div class="resultCard" id="resultCard"></div>
     </div>
