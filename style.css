@@ -124,4 +124,4 @@ input[type="text"], .hudFooter input{
   .layout{flex-direction:column;gap:12px;padding-top:110px}
   .chatArea{width:95%;max-width:none;border-radius:12px}
   .wheelWrap{max-width:95vw}
-}
+  }
