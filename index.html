@@ -2,36 +2,30 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
-    <title>Twitch Wheel Demo</title>
+    <title>Twitch Wheel — Pro UI</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div id="setup">
-    <div class="setup-box">
-        <h2>أدخل اسم القناة أو رابطها</h2>
-        <input id="channelInput" type="text" placeholder="مثال: shroud أو https://twitch.tv/shroud">
-        <button id="startBtn">ابدأ</button>
-    </div>
-</div>
+<div id="mainFrame">
+    <div class="glass-3d">
+        <div class="wrapper">
 
-<div id="game" class="hidden">
-    <div class="layout">
-        
-        <!-- العجلة يسار -->
-        <div class="wheel-area">
-            <canvas id="wheelCanvas" width="420" height="420"></canvas>
-            <button id="spinBtn" class="btn">دور</button>
-            <div id="playersList" class="list"></div>
-            <button id="resetPlayersBtn" class="small-btn">إعادة اللاعبين</button>
-            <button id="backBtn" class="small-btn red">رجوع</button>
+            <!-- Left: Wheel -->
+            <section class="wheelSide">
+                <canvas id="wheelCanvas" width="420" height="420"></canvas>
+                <button id="spinBtn" class="btn spin">دور العجلة</button>
+                <div id="playersList" class="players-list"></div>
+                <button id="resetPlayersBtn" class="btn small">إعادة اللاعبين</button>
+                <button id="backBtn" class="btn small red">رجوع</button>
+            </section>
+
+            <!-- Right: Chat -->
+            <section class="chatSide">
+                <div id="chatBox" class="chatBox"></div>
+            </section>
+
         </div>
-
-        <!-- الشات يمين -->
-        <div class="chat-area">
-            <div id="chatBox" class="chat-box"></div>
-        </div>
-
     </div>
 </div>
 
