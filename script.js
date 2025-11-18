@@ -5,14 +5,12 @@ const spinBtn = document.getElementById("spinBtn");
 const resetPlayersBtn = document.getElementById("resetPlayersBtn");
 const backBtn = document.getElementById("backBtn");
 const addPlayerBtn = document.getElementById("addPlayerBtn");
-const removeLastBtn = document.getElementById("removeLastBtn");
 const playerInput = document.getElementById("playerInput");
 
 const turnModal = document.getElementById("turnModal");
 const turnPlayerName = document.getElementById("turnPlayerName");
 const lastMention = document.getElementById("lastMention");
 const rerollBtn = document.getElementById("rerollBtn");
-const manualEliminateBtn = document.getElementById("manualEliminateBtn");
 const eliminationHistory = document.getElementById("eliminationHistory");
 
 const winnerModal = document.getElementById("winnerModal");
@@ -28,13 +26,15 @@ let eliminationLog = [];
 function drawWheel() {
     ctx.clearRect(0,0,500,500);
     if(players.length === 0) return;
-    if(players.length === 1) return;
 
     const arc = Math.PI * 2 / players.length;
 
     for(let i = 0; i < players.length; i++){
         ctx.beginPath();
-        ctx.fillStyle = `hsl(${i * 55}, 75%, 55%)`;
+        ctx.fillStyle = "#1e90ff";
+        ctx.shadowColor = "white";
+        ctx.shadowBlur = 10;
+
         ctx.moveTo(250,250);
         ctx.arc(250,250,250,arc*i,arc*(i+1));
         ctx.fill();
@@ -42,7 +42,11 @@ function drawWheel() {
         ctx.save();
         ctx.translate(250,250);
         ctx.rotate(arc*i + arc/2);
-        ctx.fillStyle = "#fff";
+        ctx.fillStyle = "white";
+        ctx.font = "bold 18px Tahoma";
+        ctx.shadowColor = "gold";
+        ctx.shadowBlur = 4;
+        ctx.textAlign = "center";
         ctx.fillText(players[i], 120, 6);
         ctx.restore();
     }
@@ -54,7 +58,15 @@ function updatePlayersList(){
     list.innerHTML = "";
     players.forEach(p=>{
         const li = document.createElement("li");
-        li.textContent = p;
+        li.textContent = p + " ";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "❌";
+        removeBtn.style.marginLeft = "10px";
+        removeBtn.onclick = ()=>{
+            eliminatePlayer(p);
+        };
+        li.appendChild(removeBtn);
         list.appendChild(li);
     });
 }
@@ -81,13 +93,6 @@ addPlayerBtn.onclick = ()=>{
 
     players.push(name);
     playerInput.value = "";
-    drawWheel();
-    updatePlayersList();
-};
-
-/* حذف آخر لاعب */
-removeLastBtn.onclick = ()=>{
-    players.pop();
     drawWheel();
     updatePlayersList();
 };
@@ -141,8 +146,7 @@ function startTurn(finalAngle){
 
     // محاكاة استقبال الرسائل
     const chatListener = (event) => {
-        const msg = event.detail; // نفترض يتم إرسال رسالة هنا
-        // فقط اللاعب الحالي يمكنه المنشن
+        const msg = event.detail;
         if(handleMention(msg)){
             document.removeEventListener("newChatMsg", chatListener);
         }
@@ -150,17 +154,10 @@ function startTurn(finalAngle){
 
     document.addEventListener("newChatMsg", chatListener);
 
-    // أزرار الستريمر
+    // زر الستريمر لتدوير العجلة مجددًا
     rerollBtn.onclick = ()=>{
         turnModal.style.display="none";
         spinBtn.click();
-        document.removeEventListener("newChatMsg", chatListener);
-    }
-    manualEliminateBtn.onclick = ()=>{
-        const name = prompt("اختر اللاعب لإقصائه من القائمة:");
-        if(name && players.includes(name)){
-            eliminatePlayer(name);
-        }
         document.removeEventListener("newChatMsg", chatListener);
     }
 }
