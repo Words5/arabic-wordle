@@ -1,75 +1,141 @@
-// DOM elements
-const spinBtn = document.getElementById("spinBtn");
-const resetPlayersBtn = document.getElementById("resetPlayersBtn");
-const backBtn = document.getElementById("backBtn");
-const chatBox = document.getElementById("chatBox");
-const playersList = document.getElementById("playersList");
-const canvas = document.getElementById("wheelCanvas");
-const ctx = canvas.getContext("2d");
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
 
-let players = [];
-
-/* Chat message system */
-function addChat(msg) {
-    const el = document.createElement("div");
-    el.classList.add("chat-msg");
-    el.textContent = msg;
-    chatBox.appendChild(el);
-
-    const msgs = chatBox.querySelectorAll(".chat-msg");
-    if (msgs.length > 10) {
-        msgs[0].classList.add("removing");
-        setTimeout(() => msgs[0].remove(), 350);
-    }
+body {
+    margin: 0;
+    font-family: "Cairo", sans-serif;
+    background: radial-gradient(circle at center, #05060d, #010104 70%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* Random demo chat event */
-setInterval(() => addChat("📩 رسالة تجريبية"), 1600);
-
-/* Wheel draw */
-function drawWheel() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (players.length === 0) return;
-
-    const arc = Math.PI * 2 / players.length;
-
-    for (let i = 0; i < players.length; i++) {
-        ctx.beginPath();
-        ctx.fillStyle = `hsl(${i * 55}, 75%, 55%)`;
-        ctx.moveTo(210,210);
-        ctx.arc(210,210,210,arc*i,arc*(i+1));
-        ctx.fill();
-
-        ctx.save();
-        ctx.translate(210,210);
-        ctx.rotate(arc*i + arc/2);
-        ctx.fillStyle = "#fff";
-        ctx.fillText(players[i], 120, 6);
-        ctx.restore();
-    }
+/* Main frame */
+#mainFrame {
+    width: 80vw;
+    height: 80vh;
+    position: relative;
 }
 
-/* Players list update */
-function updatePlayersList() {
-    playersList.textContent = `اللاعبين: ${players.join(", ")}`;
+/* Home Screen */
+.start-screen {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    text-align: center;
 }
 
-/* Spin */
-spinBtn.addEventListener("click", () => {
-    if (players.length <= 1) return;
-    const i = Math.floor(Math.random() * players.length);
-    addChat(`🚫 تم إقصاء: ${players[i]}`);
-    players.splice(i, 1);
-    drawWheel();
-    updatePlayersList();
-});
+/* Input */
+#channelInput {
+    width: 70%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    text-align: center;
+}
 
-/* Reset */
-resetPlayersBtn.addEventListener("click", () => {
-    players = [];
-    drawWheel();
-    updatePlayersList();
-});
+/* 3D Glass Container */
+.glass-3d {
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+    padding: 18px;
+    background: rgba(18,22,34,0.45);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(0,238,255,0.4);
+    box-shadow: 0px 0px 15px rgba(0,255,255,0.4),
+                inset 0 0 20px rgba(0,255,255,0.25),
+                0 0 100px rgba(0,255,255,0.2);
+}
 
-/* Back reload */
-backBtn.addEventListener("click", () => window.location.reload());
+/* Layout */
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* Left side */
+.wheelSide {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Right side */
+.chatSide {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Chat Box */
+.chatBox {
+    width: 100%;
+    height: 260px; /* <── هنا تصغير الطول */
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 10px;
+    overflow: hidden; /* يمنع التمرير */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border: 1px solid rgba(0,255,255,0.3);
+    box-shadow: inset 0 0 18px rgba(0,255,255,0.25);
+}
+
+/* Chat messages */
+.chat-msg {
+    background: rgba(0,255,255,0.15);
+    padding: 8px 11px;
+    border-radius: 7px;
+    margin-top: 6px;
+    font-size: 14px;
+    backdrop-filter: blur(4px);
+    animation: enter .3s ease;
+}
+
+@keyframes enter {
+    from { transform: translateY(15px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+/* exit animation */
+.removing {
+    animation: exit .35s forwards ease;
+}
+
+@keyframes exit {
+    from { transform: translateY(0); opacity: 1; }
+    to   { transform: translateY(-25px); opacity: 0; }
+}
+
+/* Buttons */
+.btn {
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #00eaff, #0088ff);
+    padding: 10px 22px;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: .2s;
+}
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px #00eaff;
+}
+.small { padding: 7px 14px; font-size: 13px; }
+.red { background: #b61818; }
+
+.players-list {
+    font-size: 14px;
+    min-height: 40px;
+    color: #afffff;
+}
