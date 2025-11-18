@@ -8,7 +8,21 @@ const addPlayerBtn = document.getElementById("addPlayerBtn");
 const removeLastBtn = document.getElementById("removeLastBtn");
 const playerInput = document.getElementById("playerInput");
 
+const turnModal = document.getElementById("turnModal");
+const turnPlayerName = document.getElementById("turnPlayerName");
+const lastMention = document.getElementById("lastMention");
+const rerollBtn = document.getElementById("rerollBtn");
+const manualEliminateBtn = document.getElementById("manualEliminateBtn");
+const eliminationHistory = document.getElementById("eliminationHistory");
+
+const winnerModal = document.getElementById("winnerModal");
+const winnerName = document.getElementById("winnerName");
+const closeWinnerBtn = document.getElementById("closeWinnerBtn");
+
+const chatBox = document.getElementById("chatBox");
+
 let players = [];
+let eliminationLog = [];
 
 /* رسم العجلة */
 function drawWheel() {
@@ -93,37 +107,88 @@ spinBtn.onclick = ()=>{
 
         if(speed <= 0){
             clearInterval(run);
-            finalizeSpin(currentAngle);
+            startTurn(finalAngle);
         }
 
         wheelCanvas.style.transform = `rotate(${currentAngle}deg)`;
     },20);
 };
 
-/* تحديد الفائز */
-function finalizeSpin(finalAngle){
+/* بدء نافذة الدور المنشن */
+function startTurn(finalAngle){
     const arc = 360 / players.length;
     const normalized = (360 - (finalAngle % 360)) % 360;
     const index = Math.floor(normalized / arc);
 
-    const out = players[index];
-    addChat(`🚫 إقصاء: ${out}`);
-    players.splice(index,1);
+    const currentPlayer = players[index];
 
-    drawWheel();
+    turnPlayerName.textContent = `الدور الآن على: ${currentPlayer}`;
+    lastMention.textContent = "لا توجد منشن حتى الآن";
+    turnModal.style.display = "flex";
+
+    // استقبال منشن بالشات
+    function handleMention(msg){
+        const mention = msg.trim();
+        if(!mention.startsWith("@")) return false;
+        const mentionedName = mention.substring(1);
+        if(players.includes(mentionedName)){
+            lastMention.textContent = mention;
+            eliminatePlayer(mentionedName);
+            return true;
+        }
+        return false;
+    }
+
+    // محاكاة استقبال الرسائل
+    const chatListener = (event) => {
+        const msg = event.detail; // نفترض يتم إرسال رسالة هنا
+        // فقط اللاعب الحالي يمكنه المنشن
+        if(handleMention(msg)){
+            document.removeEventListener("newChatMsg", chatListener);
+        }
+    };
+
+    document.addEventListener("newChatMsg", chatListener);
+
+    // أزرار الستريمر
+    rerollBtn.onclick = ()=>{
+        turnModal.style.display="none";
+        spinBtn.click();
+        document.removeEventListener("newChatMsg", chatListener);
+    }
+    manualEliminateBtn.onclick = ()=>{
+        const name = prompt("اختر اللاعب لإقصائه من القائمة:");
+        if(name && players.includes(name)){
+            eliminatePlayer(name);
+        }
+        document.removeEventListener("newChatMsg", chatListener);
+    }
+}
+
+/* إقصاء لاعب */
+function eliminatePlayer(name){
+    players.splice(players.indexOf(name),1);
+    eliminationLog.push(name);
     updatePlayersList();
+    drawWheel();
 
-    if(players.length === 1) showWinner(players[0]);
+    const li = document.createElement("li");
+    li.textContent = name;
+    eliminationHistory.appendChild(li);
+
+    turnModal.style.display = "none";
+
+    if(players.length===1){
+        showWinner(players[0]);
+    }
 }
 
 /* نافذة الفوز */
 function showWinner(name){
-    document.getElementById("winnerName").textContent = `🥇 الفائز: ${name}`;
-    document.getElementById("winnerModal").style.display = "flex";
+    winnerName.textContent = `🥇 الفائز: ${name}`;
+    winnerModal.style.display = "flex";
 }
-document.getElementById("closeWinnerBtn").onclick = ()=>{
-    document.getElementById("winnerModal").style.display = "none";
-};
+closeWinnerBtn.onclick = ()=> winnerModal.style.display="none";
 
 /* زر الرجوع */
-backBtn.onclick = ()=> window.location.href = "index.html";
+backBtn.onclick = ()=> window.location.href="index.html";
