@@ -1,34 +1,105 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8" />
-    <title>لعبة العجلة</title>
-    <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
-<div id="mainFrame">
-    <div class="glass-3d">
-        <div class="wrapper">
+body {
+    margin: 0;
+    font-family: "Cairo", sans-serif;
+    background: linear-gradient(120deg, #020b14, #051a2b, #020b14);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-            <!-- Left: Wheel -->
-            <section class="wheelSide">
-                <canvas id="wheelCanvas" width="420" height="420"></canvas>
-                <button id="spinBtn" class="btn spin">دور العجلة</button>
-                <div id="playersList" class="players-list"></div>
-                <button id="resetPlayersBtn" class="btn small">إعادة اللاعبين</button>
-                <button id="backBtn" class="btn small red">رجوع</button>
-            </section>
+/* Home Screen Box */
+.centerBox {
+    width: 450px;
+    padding: 30px;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    text-align: center;
+    border: 1px solid rgba(0,255,255,0.25);
+    box-shadow: 0 0 25px rgba(0,255,255,0.25);
+    color: white;
+}
 
-            <!-- Right: Chat -->
-            <section class="chatSide">
-                <div id="chatBox" class="chatBox"></div>
-            </section>
+input {
+    width: 85%;
+    padding: 12px;
+    border-radius: 9px;
+    margin: 10px 0;
+    border: none;
+    font-size: 15px;
+    text-align: center;
+}
 
-        </div>
-    </div>
-</div>
+.btn-start, button {
+    background: linear-gradient(45deg, #00d0ff, #0077ff);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: .2s;
+}
+button:hover { scale: 1.07; }
+.red { background: #b32626; }
 
-<script src="script.js"></script>
-</body>
-</html>
+/* Game Layout */
+.gameContainer {
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    gap: 20px;
+}
+
+.wheelArea {
+    flex: 3;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 15px;
+    border: 1px solid rgba(0,255,255,0.25);
+    box-shadow: 0 0 25px rgba(0,255,255,0.25);
+    text-align: center;
+    color: white;
+}
+
+.chatArea {
+    flex: 1.2;
+    background: rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 10px;
+    border: 1px solid rgba(0,255,255,0.25);
+    box-shadow: 0 0 25px rgba(0,255,255,0.25);
+    backdrop-filter: blur(10px);
+}
+
+/* Chat Box */
+.chatBox {
+    width: 100%;
+    height: 320px; /* يناسب 10 رسائل */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.chat-msg {
+    background: rgba(0,255,255,0.18);
+    padding: 7px;
+    border-radius: 8px;
+    margin: 4px;
+    font-size: 14px;
+    animation: fadeIn .3s;
+}
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(8px);}
+    to {opacity:1; transform: translateY(0);}
+}
+.removing { animation: fadeOut .4s forwards; }
+@keyframes fadeOut {
+    to {opacity:0; transform: translateY(-10px);}
+    }
