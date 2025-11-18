@@ -1,45 +1,24 @@
+const wheelCanvas = document.getElementById("wheelCanvas");
+const ctx = wheelCanvas.getContext("2d");
+
 const spinBtn = document.getElementById("spinBtn");
 const resetPlayersBtn = document.getElementById("resetPlayersBtn");
 const backBtn = document.getElementById("backBtn");
 const addPlayerBtn = document.getElementById("addPlayerBtn");
 const removeLastBtn = document.getElementById("removeLastBtn");
 const playerInput = document.getElementById("playerInput");
-const chatBox = document.getElementById("chatBox");
-const playersList = document.getElementById("playersList");
-const canvas = document.getElementById("wheelCanvas");
-const ctx = canvas.getContext("2d");
 
 let players = [];
 
-/* Chat System */
-function addChat(msg) {
-    const el = document.createElement("div");
-    el.classList.add("chat-msg");
-    el.textContent = msg;
-    chatBox.appendChild(el);
-
-    const msgs = chatBox.querySelectorAll(".chat-msg");
-    if (msgs.length > 10) {
-        msgs[0].classList.add("removing");
-        setTimeout(() => msgs[0].remove(), 350);
-    }
-}
-
-/* Fake chat */
-setInterval(() => addChat("📩 رسالة تجريبية"), 1600);
-
-/* Wheel */
+/* رسم العجلة */
 function drawWheel() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (players.length === 1) {
-        playersList.innerHTML = `<span class="winnerEffect">🏆 الفائز: ${players[0]} 🎉</span>`;
-        return;
-    }
-    if (players.length === 0) return;
+    ctx.clearRect(0,0,500,500);
+    if(players.length === 0) return;
+    if(players.length === 1) return;
 
     const arc = Math.PI * 2 / players.length;
-    for (let i = 0; i < players.length; i++) {
+
+    for(let i = 0; i < players.length; i++){
         ctx.beginPath();
         ctx.fillStyle = `hsl(${i * 55}, 75%, 55%)`;
         ctx.moveTo(250,250);
@@ -55,45 +34,96 @@ function drawWheel() {
     }
 }
 
-function updatePlayersList() {
-    if (players.length > 1)
-        playersList.textContent = `اللاعبين: ${players.join("، ")}`;
+/* تحديث قائمة اللاعبين */
+function updatePlayersList(){
+    const list = document.getElementById("playersListDisplay");
+    list.innerHTML = "";
+    players.forEach(p=>{
+        const li = document.createElement("li");
+        li.textContent = p;
+        list.appendChild(li);
+    });
 }
 
-/* Add Player */
-addPlayerBtn.addEventListener("click", () => {
+/* الشات */
+function addChat(msg){
+    const el = document.createElement("div");
+    el.classList.add("chat-msg");
+    el.textContent = msg;
+    chatBox.appendChild(el);
+
+    const msgs = chatBox.querySelectorAll(".chat-msg");
+    if(msgs.length > 10){
+        msgs[0].classList.add("removing");
+        setTimeout(()=>msgs[0].remove(),350);
+    }
+}
+
+/* إضافة لاعب */
+addPlayerBtn.onclick = ()=>{
     let name = playerInput.value.trim();
-    if (!name) return;
-    if (players.includes(name)) return alert("❌ اسم موجود مسبقاً");
+    if(!name) return;
+    if(players.includes(name)) return alert("اسم موجود مسبقاً");
+
     players.push(name);
     playerInput.value = "";
     drawWheel();
     updatePlayersList();
-});
+};
 
-/* Remove last */
-removeLastBtn.addEventListener("click", () => {
+/* حذف آخر لاعب */
+removeLastBtn.onclick = ()=>{
     players.pop();
     drawWheel();
     updatePlayersList();
-});
+};
 
-/* Spin */
-spinBtn.addEventListener("click", () => {
-    if (players.length <= 1) return;
-    const i = Math.floor(Math.random() * players.length);
-    addChat(`🚫 إقصاء: ${players[i]}`);
-    players.splice(i, 1);
+/* دوران واقعي */
+spinBtn.onclick = ()=>{
+    if(players.length <= 1) return;
+
+    let finalAngle = Math.random() * 360 + 720;
+    let currentAngle = 0;
+    let speed = 15;
+    const friction = 0.15;
+
+    const run = setInterval(()=>{
+        currentAngle += speed;
+        speed -= friction;
+
+        if(speed <= 0){
+            clearInterval(run);
+            finalizeSpin(currentAngle);
+        }
+
+        wheelCanvas.style.transform = `rotate(${currentAngle}deg)`;
+    },20);
+};
+
+/* تحديد الفائز */
+function finalizeSpin(finalAngle){
+    const arc = 360 / players.length;
+    const normalized = (360 - (finalAngle % 360)) % 360;
+    const index = Math.floor(normalized / arc);
+
+    const out = players[index];
+    addChat(`🚫 إقصاء: ${out}`);
+    players.splice(index,1);
+
     drawWheel();
     updatePlayersList();
-});
 
-/* Reset */
-resetPlayersBtn.addEventListener("click", () => {
-    players = [];
-    drawWheel();
-    updatePlayersList();
-});
+    if(players.length === 1) showWinner(players[0]);
+}
 
-/* Back */
-backBtn.addEventListener("click", () => window.location.href = "index.html");
+/* نافذة الفوز */
+function showWinner(name){
+    document.getElementById("winnerName").textContent = `🥇 الفائز: ${name}`;
+    document.getElementById("winnerModal").style.display = "flex";
+}
+document.getElementById("closeWinnerBtn").onclick = ()=>{
+    document.getElementById("winnerModal").style.display = "none";
+};
+
+/* زر الرجوع */
+backBtn.onclick = ()=> window.location.href = "index.html";
