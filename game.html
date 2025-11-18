@@ -7,26 +7,22 @@
 </head>
 <body>
 
-<div id="mainFrame">
-    <div class="glass-3d">
-        <div class="wrapper">
-
-            <!-- Left: Wheel -->
-            <section class="wheelSide">
-                <canvas id="wheelCanvas" width="420" height="420"></canvas>
-                <button id="spinBtn" class="btn spin">دور العجلة</button>
-                <div id="playersList" class="players-list"></div>
-                <button id="resetPlayersBtn" class="btn small">إعادة اللاعبين</button>
-                <button id="backBtn" class="btn small red">رجوع</button>
-            </section>
-
-            <!-- Right: Chat -->
-            <section class="chatSide">
-                <div id="chatBox" class="chatBox"></div>
-            </section>
-
+<div class="gameContainer">
+    
+    <div class="wheelArea">
+        <canvas id="wheelCanvas" width="500" height="500"></canvas>
+        <div class="controls">
+            <button id="spinBtn">دور العجلة</button>
+            <button id="resetPlayersBtn">إعادة</button>
+            <button id="backBtn" class="red">رجوع</button>
         </div>
+        <p id="playersList"></p>
     </div>
+
+    <div class="chatArea">
+        <div id="chatBox" class="chatBox"></div>
+    </div>
+
 </div>
 
 <script src="script.js"></script>
