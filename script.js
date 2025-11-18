@@ -1,8 +1,9 @@
+// Demo mode script - no real Twitch connection
 let players = [];
-let ws = null;
 let spinning = false;
 let currentChannel = "";
 
+/* DOM */
 const setupScreen = document.getElementById("setupScreen");
 const gameScreen = document.getElementById("gameScreen");
 const channelInput = document.getElementById("channelInput");
@@ -20,7 +21,10 @@ const spinBtn = document.getElementById("spinBtn");
 const fastSpinBtn = document.getElementById("fastSpinBtn");
 const overlay = document.getElementById("overlayResult");
 const resultCard = document.getElementById("resultCard");
+const manualMsgInput = document.getElementById("manualMsg");
+const sendManualBtn = document.getElementById("sendManual");
 
+/* Canvas */
 const canvas = document.getElementById("wheelCanvas");
 const ctx = canvas.getContext("2d");
 const W = canvas.width;
@@ -28,41 +32,35 @@ const H = canvas.height;
 const CX = W/2, CY = H/2;
 const R = Math.min(W,H)/2 - 8;
 
-function extractChannel(input){
-  if(!input) return "";
-  input = input.trim();
-  try {
-    if(input.includes("twitch.tv/")){
-      const u = input.split("twitch.tv/")[1].split(/[/?#]/)[0];
-      return u.toLowerCase();
-    }
-  } catch(e){}
-  return input.toLowerCase();
-}
-
+/* helpers */
 function escapeHtml(str){
   return String(str).replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
 }
-
 function addChatUI(text, user){
   const el = document.createElement("div");
   el.className = "chatMessage";
   if(user){
-    el.innerHTML = `<span class="user">${user}</span><span>${escapeHtml(text)}</span>`;
+    el.innerHTML = `<span class="user">${escapeHtml(user)}</span><span>${escapeHtml(text)}</span>`;
   } else {
     el.textContent = text;
   }
+  // prepend because chatBox is column-reverse; newest at bottom visually but DOM top
   chatBox.prepend(el);
 
+  // keep only 10 messages
   const msgs = chatBox.querySelectorAll(".chatMessage");
-  if(msgs.length > 10){ msgs[msgs.length-1].remove(); }
+  if(msgs.length > 10){
+    msgs[msgs.length - 1].remove();
+  }
 }
 
+/* wheel drawing */
 function drawWheel(rotation = 0){
   ctx.clearRect(0,0,W,H);
   const n = Math.max(1, players.length);
   const arc = (Math.PI*2) / n;
 
+  // rim glow
   const g = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
   g.addColorStop(0, "rgba(255,255,255,0.02)");
   g.addColorStop(1, "rgba(0,0,0,0.25)");
@@ -90,6 +88,7 @@ function drawWheel(rotation = 0){
     ctx.restore();
   }
 
+  // center disk
   ctx.beginPath();
   ctx.arc(CX,CY, R*0.18, 0, Math.PI*2);
   ctx.fillStyle = "rgba(0,0,0,0.55)";
@@ -99,35 +98,16 @@ function drawWheel(rotation = 0){
   ctx.stroke();
 }
 
-function startChatConnection(channel){
-  if(ws){ try{ ws.close(); }catch(e){} ws=null; }
-  addChatUI(`✔️ جاري الاتصال بـ ${channel}`);
-  ws = new WebSocket("wss://irc-ws.chat.twitch.tv:443");
-  ws.addEventListener("open", ()=>{
-    ws.send("PASS SCHMOOPIIE");
-    ws.send("NICK justinfan12345");
-    ws.send(`JOIN #${channel}`);
-    addChatUI("✔️ متصل بنجاح");
-  });
-
-  ws.addEventListener("message",(evt)=>{
-    const raw = evt.data;
-    if(typeof raw!=="string") return;
-    if(raw.startsWith("PING")){ ws.send("PONG :tmi.twitch.tv"); return; }
-    if(raw.includes("PRIVMSG")){
-      try{
-        const username = raw.split("!")[0].replace(":","");
-        const message = raw.split("PRIVMSG")[1].split(":")[1];
-        addChatUI(message, username);
-        if(message.trim().toLowerCase()==="!join" && !players.includes(username)){
-          players.push(username);
-          updatePlayersList();
-          drawWheel();
-        }
-      }catch(e){}
+/* UI actions (demo start — no websocket) */
+function extractChannel(input){
+  if(!input) return "";
+  input = input.trim();
+  try {
+    if(input.includes("twitch.tv/")){
+      return input.split("twitch.tv/")[1].split(/[/?#]/)[0].toLowerCase();
     }
-  });
-  ws.addEventListener("close",()=>{ addChatUI("⚠️ اتصال الشات انقطع"); });
+  } catch(e){}
+  return input.toLowerCase();
 }
 
 startBtn.addEventListener("click", ()=>{
@@ -139,29 +119,121 @@ startBtn.addEventListener("click", ()=>{
   channelNameAside.textContent = ch;
   setupScreen.classList.remove("active");
   gameScreen.classList.add("active");
-  startChatConnection(ch);
+
+  addChatUI("⚠️ وضع العرض التوضيحي (Demo) — اكتب رسائل في أسفل الشات أو اضغط J لإضافة مستخدم.", "SYSTEM");
 });
 
-examplesBtn.addEventListener("click", ()=>{ channelInput.value="xqc"; });
+examplesBtn.addEventListener("click", ()=>{ channelInput.value = "xqc"; });
 
 backBtn.addEventListener("click", ()=>{
-  if(ws){ try{ ws.close(); }catch(e){} ws=null; }
-  players=[]; chatBox.innerHTML=""; updatePlayersList(); drawWheel();
+  // reset demo state
+  players = [];
+  chatBox.innerHTML = "";
+  updatePlayersList();
+  drawWheel();
   setupScreen.classList.add("active");
   gameScreen.classList.remove("active");
-  channelInput.value="";
-  channelNameUI.textContent="---"; channelNameAside.textContent="-";
+  channelInput.value = "";
+  channelNameUI.textContent = "---";
+  channelNameAside.textContent = "-";
 });
 
 resetPlayersBtn.addEventListener("click", ()=>{
-  players=[]; updatePlayersList(); drawWheel();
+  players = [];
+  updatePlayersList();
+  drawWheel();
 });
 
-clearChatBtn.addEventListener("click", ()=>chatBox.innerHTML="");
+clearChatBtn.addEventListener("click", ()=> chatBox.innerHTML = "");
 
-function spinWheel(long=true){
-  if(spinning || players.length<2) return;
-  spinning=true;
-  const rounds = long ? Math.random()*4+8 : Math.random()*4+4;
-  const extra = Math.random()*Math.PI*2;
-  const startRot=0;
+/* manual send: if message is !join -> add player */
+sendManualBtn.addEventListener("click", ()=>{
+  const txt = manualMsgInput.value.trim();
+  if(!txt) return;
+  // treat send as from "Viewer" (يمكن تعديل الاسم)
+  addChatUI(txt, "Viewer");
+  manualMsgInput.value = "";
+
+  if(txt.toLowerCase() === "!join"){
+    // create simple unique name from counter
+    const name = "viewer" + Math.floor(Math.random()*9000 + 100);
+    if(!players.includes(name)){
+      players.push(name);
+      updatePlayersList();
+      drawWheel();
+    }
+  }
+});
+
+/* keyboard J => add fake join (quick demo) */
+window.addEventListener("keydown", (e)=>{
+  if(e.key.toLowerCase() === "j"){
+    const fake = "user" + Math.floor(Math.random()*999);
+    if(!players.includes(fake)){
+      players.push(fake);
+      updatePlayersList();
+      drawWheel();
+      addChatUI("!join", fake);
+    }
+  }
+});
+
+/* spin logic with ease-out and pointer mapping */
+function spinWheel(long = true){
+  if(spinning || players.length < 2) return;
+  spinning = true;
+
+  const rounds = long ? randRange(8,12) : randRange(4,8);
+  const extra = Math.random() * Math.PI * 2;
+  const startRot = 0;
+  const endRot = rounds * Math.PI * 2 + extra;
+  const dur = long ? 4200 : 2200;
+  const start = performance.now();
+
+  function frame(now){
+    const t = Math.min(1, (now - start)/dur);
+    const eased = easeOutCubic(t);
+    const cur = startRot + (endRot - startRot) * eased;
+    drawWheel(cur);
+
+    if(t < 1){
+      requestAnimationFrame(frame);
+    } else {
+      const normalized = (cur % (Math.PI*2) + (Math.PI*2)) % (Math.PI*2);
+      // pointer at top (-PI/2). compute angle relative to sector start
+      const pointerAngle = (Math.PI*2) - (Math.PI/2) - normalized;
+      const arc = (Math.PI*2) / players.length;
+      let idx = Math.floor((pointerAngle % (Math.PI*2)) / arc);
+      idx = ((idx % players.length) + players.length) % players.length;
+      const loser = players[idx];
+      showResult(loser);
+      // remove loser
+      players.splice(idx,1);
+      updatePlayersList();
+      drawWheel(0);
+      spinning = false;
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+spinBtn.addEventListener("click", ()=> spinWheel(true));
+fastSpinBtn.addEventListener("click", ()=> spinWheel(false));
+
+/* util */
+function randRange(a,b){ return a + Math.random()*(b-a); }
+function easeOutCubic(x){ return 1 - Math.pow(1-x,3); }
+
+function updatePlayersList(){
+  playersList.textContent = players.length ? `Players: ${players.join(", ")}` : "Players: —";
+}
+
+function showResult(name){
+  resultCard.textContent = `${name} OUT!`;
+  overlay.classList.remove("hidden");
+  setTimeout(()=> overlay.classList.add("hidden"), 1700);
+}
+
+/* initial render */
+drawWheel(0);
+updatePlayersList();
