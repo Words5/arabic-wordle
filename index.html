@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>بدء اللعبة</title>
-    <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>الدخول للعبة</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="centerBox">
-    <h2>🎮 لعبة عجلة البث المباشرة</h2>
-
-    <p>اكتب اسم قناة تويتش أو رابطها</p>
-    <input type="text" id="channelInput" placeholder="مثال: xQc أو https://twitch.tv/xQc">
-
-    <button id="startGameBtn" class="btn-start">ابدأ</button>
+<div class="startContainer">
+    <h1>🎮 لعبة العجلة التفاعلية</h1>
+    <input id="channelInput" type="text" placeholder="اكتب اسم القناة أو الرابط">
+    <button id="startBtn">ابدأ</button>
 </div>
 
 <script>
-document.getElementById("startGameBtn").addEventListener("click", () => {
-    const channel = document.getElementById("channelInput").value.trim();
-    if(channel !== ""){
-        sessionStorage.setItem("twitchChannel", channel);
-        window.location.href = "game.html";
-    }
-});
+document.getElementById("startBtn").onclick = function() {
+    const val = document.getElementById("channelInput").value.trim();
+    if(!val) return alert("الرجاء إدخال اسم القناة");
+    localStorage.setItem("channelName", val);
+    window.location.href = "game.html";
+}
 </script>
 
 </body>
