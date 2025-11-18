@@ -1,125 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap');
+
 body {
     margin: 0;
     font-family: "Cairo", sans-serif;
-    background: radial-gradient(circle at center, #101420, #06070a 70%);
+    background: radial-gradient(circle at center, #05060d, #010104 70%);
     color: white;
-    overflow: hidden;
-}
-
-/* شاشة البداية */
-#setup {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
 }
 
-.setup-box {
-    background: rgba(255,255,255,0.05);
-    padding: 25px;
-    border-radius: 12px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 0 18px rgba(0,0,0,0.5);
-    text-align: center;
+/* Main frame */
+#mainFrame {
+    width: 80vw;
+    height: 80vh;
+    position: relative;
 }
 
-.setup-box input {
-    width: 260px;
-    padding: 9px;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    margin-top: 8px;
+/* 3D Glass Container */
+.glass-3d {
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+    padding: 18px;
+    background: rgba(18, 22, 34, 0.45);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(0, 238, 255, 0.4);
+    box-shadow:
+        0px 0px 15px rgba(0, 255, 255, 0.4),
+        inset 0 0 20px rgba(0, 255, 255, 0.25),
+        0 0 100px rgba(0, 255, 255, 0.2);
 }
 
-.setup-box button {
-    margin-top: 12px;
-    padding: 10px 22px;
-    cursor: pointer;
-}
-
-/* الشاشة الثانية */
-.hidden {
-    display: none;
-}
-
-.layout {
+/* Flex interior layout */
+.wrapper {
     display: flex;
-    height: 100vh;
-    padding: 40px;
-    gap: 28px;
+    width: 100%;
+    height: 100%;
 }
 
-/* يسار */
-.wheel-area {
+/* Left side */
+.wheelSide {
     flex: 2;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
-/* يمين (الشات) */
-.chat-area {
+/* Right side */
+.chatSide {
     flex: 1;
     display: flex;
     justify-content: flex-end;
 }
 
-.chat-box {
+/* Chat Box */
+.chatBox {
     width: 100%;
     height: 100%;
-    background: rgba(255,255,255,0.05);
-    border-radius: 14px;
-    padding: 12px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 10px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    border: 1px solid rgba(0,255,255,0.3);
+    box-shadow: inset 0 0 18px rgba(0,255,255,0.25);
 }
 
-/* الرسالة */
+/* Chat messages */
 .chat-msg {
-    background: rgba(255,255,255,0.07);
-    padding: 7px 10px;
-    border-radius: 8px;
+    background: rgba(0,255,255,0.15);
+    padding: 8px 11px;
+    border-radius: 7px;
     margin-top: 6px;
-    animation: slideIn .3s ease;
+    font-size: 14px;
+    backdrop-filter: blur(4px);
+    animation: enter .3s ease;
 }
-
-@keyframes slideIn {
+@keyframes enter {
     from { transform: translateY(15px); opacity: 0; }
     to   { transform: translateY(0); opacity: 1; }
 }
 
-/* حركة صعود عند الحذف */
+/* Animation when removed */
 .removing {
-    animation: slideUpRemove .35s forwards ease;
+    animation: exit .35s forwards ease;
 }
-
-@keyframes slideUpRemove {
+@keyframes exit {
     from { transform: translateY(0); opacity: 1; }
-    to   { transform: translateY(-20px); opacity: 0; }
+    to   { transform: translateY(-25px); opacity: 0; }
 }
 
-.btn, .small-btn {
-    background: #1b55c5;
+/* Buttons */
+.btn {
     border: none;
-    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #00eaff, #0088ff);
+    padding: 10px 22px;
     cursor: pointer;
-    margin-top: 12px;
-    border-radius: 6px;
-    color: #fff;
+    color: white;
+    font-weight: 600;
+    transition: .2s;
+}
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px #00eaff;
 }
 
-.small-btn {
-    padding: 7px 12px;
-}
+.small { padding: 7px 14px; font-size: 13px; }
+.red { background: #b61818; }
 
-.red {
-    background: #b02424;
-}
-
-/* قائمة اللاعبين */
-.list {
-    margin-top: 10px;
-    min-height: 40px;
+/* Players text */
+.players-list {
     font-size: 14px;
-}
+    min-height: 40px;
+    color: #afffff;
+    }
