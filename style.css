@@ -1,105 +1,154 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-
 body {
     margin: 0;
-    font-family: "Cairo", sans-serif;
-    background: linear-gradient(120deg, #020b14, #051a2b, #020b14);
+    font-family: Tahoma;
+    background: radial-gradient(circle, #1b1b1b, #000);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #fff;
 }
 
-/* Home Screen Box */
-.centerBox {
-    width: 450px;
-    padding: 30px;
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(10px);
-    border-radius: 18px;
+/* صفحة البداية */
+.startContainer {
+    background: rgba(255,255,255,0.1);
+    padding: 25px;
+    border-radius: 14px;
     text-align: center;
-    border: 1px solid rgba(0,255,255,0.25);
-    box-shadow: 0 0 25px rgba(0,255,255,0.25);
-    color: white;
+    backdrop-filter: blur(6px);
+    border: 2px solid gold;
 }
-
-input {
-    width: 85%;
-    padding: 12px;
-    border-radius: 9px;
+.startContainer input {
+    width: 250px;
+    padding: 10px;
     margin: 10px 0;
-    border: none;
-    font-size: 15px;
-    text-align: center;
 }
-
-.btn-start, button {
-    background: linear-gradient(45deg, #00d0ff, #0077ff);
-    border: none;
+.startContainer button {
     padding: 10px 20px;
-    border-radius: 12px;
-    font-size: 16px;
-    color: white;
     cursor: pointer;
-    margin-top: 5px;
-    transition: .2s;
 }
-button:hover { scale: 1.07; }
-.red { background: #b32626; }
 
-/* Game Layout */
+/* الصفحة الرئيسية */
 .gameContainer {
-    width: 90vw;
-    height: 90vh;
     display: flex;
     gap: 20px;
 }
 
 .wheelArea {
-    flex: 3;
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 15px;
-    border: 1px solid rgba(0,255,255,0.25);
-    box-shadow: 0 0 25px rgba(0,255,255,0.25);
+    position: relative;
+}
+
+/* السهم */
+.pointer {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 40px solid gold;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 0 6px gold);
+    z-index: 10;
+}
+
+/* اللاعبين + الشات */
+.rightPanel {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.playersBox {
+    background: rgba(255,255,255,0.12);
+    border: 2px solid gold;
+    border-radius: 10px;
+    padding: 8px 10px;
+    height: 170px;
+    overflow-y: auto;
     text-align: center;
+    backdrop-filter: blur(6px);
+}
+.playersBox h3 {
+    margin: 0 0 8px 0;
+    color: gold;
+}
+.playersBox li {
+    padding: 4px;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.chatBox {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid gold;
+    border-radius: 10px;
+    height: 290px;
+    overflow: hidden;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* الرسائل */
+.chat-msg {
+    margin-bottom: 4px;
+    font-size: 14px;
+    opacity: 1;
+    transition: opacity 0.4s;
+}
+.removing {
+    opacity: 0;
+}
+
+/* إضافة لاعبين */
+.addPlayerBox {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.addPlayerBox input {
+    width: 150px;
+    padding: 7px;
+    text-align: center;
+}
+
+/* أزرار */
+button {
+    cursor: pointer;
+    padding: 6px 15px;
+}
+.red {
+    background: darkred;
     color: white;
 }
 
-.chatArea {
-    flex: 1.2;
-    background: rgba(255,255,255,0.07);
-    border-radius: 20px;
-    padding: 10px;
-    border: 1px solid rgba(0,255,255,0.25);
-    box-shadow: 0 0 25px rgba(0,255,255,0.25);
-    backdrop-filter: blur(10px);
+/* نافذة الفائز */
+.winnerModal {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
 }
-
-/* Chat Box */
-.chatBox {
-    width: 100%;
-    height: 320px; /* يناسب 10 رسائل */
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+.winnerBox {
+    background: white;
+    padding: 40px 70px;
+    border-radius: 15px;
+    border: 3px solid gold;
+    box-shadow: 0 0 25px gold;
+    color: #000;
+    text-align: center;
 }
-
-.chat-msg {
-    background: rgba(0,255,255,0.18);
-    padding: 7px;
-    border-radius: 8px;
-    margin: 4px;
-    font-size: 14px;
-    animation: fadeIn .3s;
-}
-@keyframes fadeIn {
-    from {opacity:0; transform: translateY(8px);}
-    to {opacity:1; transform: translateY(0);}
-}
-.removing { animation: fadeOut .4s forwards; }
-@keyframes fadeOut {
-    to {opacity:0; transform: translateY(-10px);}
-    }
+#winnerName {
+    font-size: 35px;
+    margin-bottom: 25px;
+    color: #000;
+                     }
