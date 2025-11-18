@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <title>لعبة العجلة</title>
-    <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>لعبة العجلة</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="gameContainer">
-    
+
     <div class="wheelArea">
+        <div class="pointer"></div>
         <canvas id="wheelCanvas" width="500" height="500"></canvas>
 
         <div class="addPlayerBox">
@@ -23,16 +24,32 @@
             <button id="resetPlayersBtn">إعادة</button>
             <button id="backBtn" class="red">رجوع</button>
         </div>
-
-        <p id="playersList"></p>
     </div>
 
-    <div class="chatArea">
-        <div id="chatBox" class="chatBox"></div>
+    <div class="rightPanel">
+
+        <div class="playersBox" id="playersBox">
+            <h3>اللاعبين</h3>
+            <ul id="playersListDisplay"></ul>
+        </div>
+
+        <div class="chatArea">
+            <div id="chatBox" class="chatBox"></div>
+        </div>
+
     </div>
 
 </div>
 
+
+<!-- الفائز -->
+<div id="winnerModal" class="winnerModal">
+    <div class="winnerBox">
+        <h1 id="winnerName"></h1>
+        <button id="closeWinnerBtn">إغلاق</button>
+    </div>
+</div>
+
 <script src="script.js"></script>
 </body>
-</html>
+    </html>
