@@ -1,6 +1,9 @@
 const spinBtn = document.getElementById("spinBtn");
 const resetPlayersBtn = document.getElementById("resetPlayersBtn");
 const backBtn = document.getElementById("backBtn");
+const addPlayerBtn = document.getElementById("addPlayerBtn");
+const removeLastBtn = document.getElementById("removeLastBtn");
+const playerInput = document.getElementById("playerInput");
 const chatBox = document.getElementById("chatBox");
 const playersList = document.getElementById("playersList");
 const canvas = document.getElementById("wheelCanvas");
@@ -8,6 +11,7 @@ const ctx = canvas.getContext("2d");
 
 let players = [];
 
+/* Chat System */
 function addChat(msg) {
     const el = document.createElement("div");
     el.classList.add("chat-msg");
@@ -21,10 +25,17 @@ function addChat(msg) {
     }
 }
 
+/* Fake chat */
 setInterval(() => addChat("📩 رسالة تجريبية"), 1600);
 
+/* Wheel */
 function drawWheel() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (players.length === 1) {
+        playersList.innerHTML = `<span class="winnerEffect">🏆 الفائز: ${players[0]} 🎉</span>`;
+        return;
+    }
     if (players.length === 0) return;
 
     const arc = Math.PI * 2 / players.length;
@@ -43,9 +54,31 @@ function drawWheel() {
         ctx.restore();
     }
 }
+
 function updatePlayersList() {
-    playersList.textContent = `اللاعبين: ${players.join("، ")}`;
+    if (players.length > 1)
+        playersList.textContent = `اللاعبين: ${players.join("، ")}`;
 }
+
+/* Add Player */
+addPlayerBtn.addEventListener("click", () => {
+    let name = playerInput.value.trim();
+    if (!name) return;
+    if (players.includes(name)) return alert("❌ اسم موجود مسبقاً");
+    players.push(name);
+    playerInput.value = "";
+    drawWheel();
+    updatePlayersList();
+});
+
+/* Remove last */
+removeLastBtn.addEventListener("click", () => {
+    players.pop();
+    drawWheel();
+    updatePlayersList();
+});
+
+/* Spin */
 spinBtn.addEventListener("click", () => {
     if (players.length <= 1) return;
     const i = Math.floor(Math.random() * players.length);
@@ -54,9 +87,13 @@ spinBtn.addEventListener("click", () => {
     drawWheel();
     updatePlayersList();
 });
+
+/* Reset */
 resetPlayersBtn.addEventListener("click", () => {
     players = [];
     drawWheel();
     updatePlayersList();
 });
+
+/* Back */
 backBtn.addEventListener("click", () => window.location.href = "index.html");
