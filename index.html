@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <title>Twitch Wheel — Pro UI</title>
+    <meta charset="UTF-8">
+    <title>بدء اللعبة</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div id="mainFrame">
-    <div class="glass-3d">
-        <div class="wrapper">
+    <div class="glass-3d start-screen">
 
-            <!-- Left: Wheel -->
-            <section class="wheelSide">
-                <canvas id="wheelCanvas" width="420" height="420"></canvas>
-                <button id="spinBtn" class="btn spin">دور العجلة</button>
-                <div id="playersList" class="players-list"></div>
-                <button id="resetPlayersBtn" class="btn small">إعادة اللاعبين</button>
-                <button id="backBtn" class="btn small red">رجوع</button>
-            </section>
+        <h2>🎮 لعبة عجلة البث المباشرة</h2>
 
-            <!-- Right: Chat -->
-            <section class="chatSide">
-                <div id="chatBox" class="chatBox"></div>
-            </section>
+        <p>أدخل اسم قناة تويتش أو رابطها</p>
+        <input type="text" id="channelInput" placeholder="مثال: xQc أو https://twitch.tv/xQc">
 
-        </div>
+        <button id="startGameBtn" class="btn">ابدأ</button>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+document.getElementById("startGameBtn").addEventListener("click", () => {
+    const channel = document.getElementById("channelInput").value.trim();
+    if(channel !== ""){
+        sessionStorage.setItem("twitchChannel", channel);
+        window.location.href = "game.html";
+    }
+});
+</script>
+
 </body>
-</html>
+    </html>
