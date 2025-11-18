@@ -1,74 +1,40 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pro Twitch Wheel - HUD Demo</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <title>Twitch Wheel Demo</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- شاشة الإعداد -->
-  <div id="setupScreen" class="screen active">
-    <div class="centerBox">
-      <h1 class="title">🎡 Wheel Royale - HUD (Demo)</h1>
-      <p class="subtitle">اكتب اسم القناة أو رابطها (مثال: xQc أو https://twitch.tv/xQc)</p>
-      <input id="channelInput" type="text" placeholder="اسم القناة أو رابطها" />
-      <div class="row">
-        <button id="startBtn" class="btn primary">ابدأ</button>
-        <button id="examplesBtn" class="btn ghost">أمثلة</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- واجهة اللعبة الرئيسية -->
-  <div id="gameScreen" class="screen">
-    <div class="topBar">
-      <div class="leftControls">
-        <button id="backBtn" class="btn danger">رجوع</button>
-        <button id="resetPlayersBtn" class="btn neutral">تفريغ اللاعبين</button>
-        <button id="clearChatBtn" class="btn neutral">تنظيف الشات</button>
-      </div>
-      <div class="rightTitle">#<span id="channelNameUI">---</span></div>
+<div id="setup">
+    <div class="setup-box">
+        <h2>أدخل اسم القناة أو رابطها</h2>
+        <input id="channelInput" type="text" placeholder="مثال: shroud أو https://twitch.tv/shroud">
+        <button id="startBtn">ابدأ</button>
     </div>
+</div>
 
+<div id="game" class="hidden">
     <div class="layout">
-      <!-- منطقة اللعبة -->
-      <div class="gameArea">
-        <div class="gameHeader">
-          <h2>Wheel Royale</h2>
-          <div class="playersBox" id="playersList">Players: —</div>
+        
+        <!-- العجلة يسار -->
+        <div class="wheel-area">
+            <canvas id="wheelCanvas" width="420" height="420"></canvas>
+            <button id="spinBtn" class="btn">دور</button>
+            <div id="playersList" class="list"></div>
+            <button id="resetPlayersBtn" class="small-btn">إعادة اللاعبين</button>
+            <button id="backBtn" class="small-btn red">رجوع</button>
         </div>
 
-        <div class="wheelWrap">
-          <canvas id="wheelCanvas" width="600" height="600"></canvas>
-          <div class="pointer"></div>
+        <!-- الشات يمين -->
+        <div class="chat-area">
+            <div id="chatBox" class="chat-box"></div>
         </div>
 
-        <div class="controlsRow">
-          <button id="spinBtn" class="btn primary big">Spin</button>
-          <button id="fastSpinBtn" class="btn ghost">Fast</button>
-        </div>
-      </div>
-
-      <!-- نافذة الشات بنمط HUD -->
-      <aside class="chatArea hud">
-        <div class="hudHeader">
-          <div class="hudTitle">Chat</div>
-          <div class="hudSub">قناة: <strong id="channelNameAside">-</strong></div>
-        </div>
-        <div id="chatBox" class="chatBox"></div>
-        <div class="hudFooter">
-          <input id="manualMsg" placeholder="اكتب رسالة هنا ثم اضغط Send — !join للإشتراك" />
-          <button id="sendManual" class="btn tiny">Send</button>
-        </div>
-      </aside>
     </div>
+</div>
 
-    <div id="overlayResult" class="overlay hidden">
-      <div class="resultCard" id="resultCard"></div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
