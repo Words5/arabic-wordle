@@ -38,9 +38,22 @@
         </div>
 
     </div>
-
 </div>
 
+<!-- نافذة الدور المنشن -->
+<div id="turnModal" class="turnModal">
+    <div class="turnBox">
+        <h2 id="turnPlayerName"></h2>
+        <p>يرجى كتابة منشن للاعب الذي سيتم إقصاؤه بصيغة: <strong>@PlayerName</strong></p>
+        <div id="lastMention" class="mentionDisplay">لا توجد منشن حتى الآن</div>
+        <div class="turnButtons">
+            <button id="rerollBtn">🔁 تدوير العجلة مجددًا</button>
+            <button id="manualEliminateBtn">❌ اختيار لاعب يدويًا</button>
+        </div>
+        <h3>سجل الإقصاءات:</h3>
+        <ul id="eliminationHistory"></ul>
+    </div>
+</div>
 
 <!-- الفائز -->
 <div id="winnerModal" class="winnerModal">
@@ -52,4 +65,4 @@
 
 <script src="script.js"></script>
 </body>
-    </html>
+            </html>
